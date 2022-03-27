@@ -7,13 +7,18 @@ import logo from '../../assets/images/logo.png'
 // const Item = Form.Item 
 // <Form.Item> 可簡寫 <Item>
 
-export default class Login extends Component {
+ class Login extends Component {
 
   handleSubmit = (event)=>{
 
   }
 
   render() {
+
+    const form = this.props.form
+
+    const { getFieldDecorator } = form
+
     return (
       <div className='login'>
         <header className='login-header'>
@@ -47,3 +52,7 @@ export default class Login extends Component {
     )
   }
 }
+
+const WrapLogin = Form.create()(Login)
+
+export default WrapLogin
