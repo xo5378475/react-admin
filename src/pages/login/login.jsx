@@ -16,6 +16,21 @@ import logo from '../../assets/images/logo.png'
     console.log('handleSubmit',values);
   }
 
+  validatePwd = (rule,value,callback)=>{
+    console.log(rule,value);
+    if(!value){
+      callback("密碼必須輸入")
+    } else if(value.length < 4){
+      callback('密碼至少4位')
+    } else if(value.length > 12){
+      callback("密碼最多12位")
+    } else if(!/^[a-zA-Z0-9_]+$/.test(value)){
+      callback('密碼必須是英文數字下划線組成')
+    } else{
+      callback()//無傳參表示成功
+    }
+  }
+
   render() {
 
     const form = this.props.form
@@ -52,7 +67,9 @@ import logo from '../../assets/images/logo.png'
             </Form.Item>
             <Form.Item>             
               {
-                getFieldDecorator('password',{})(
+                getFieldDecorator('password',{
+                  rules:[{validator:this.validatePwd}]
+                })(
                 <Input
                   prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   type="password"
