@@ -33,7 +33,16 @@ import logo from '../../assets/images/logo.png'
           <Form onSubmit={this.handleSubmit} className="login-form">
             <Form.Item>    
               {
-                getFieldDecorator('username',{})(
+                getFieldDecorator('username',{
+                  validateFirst:true,
+                  //聲明式驗證
+                  rules:[
+                    {required:true,whitespace:true,message:'用戶名必須輸入'},
+                    {min:4,message:'用戶名至少4位'},
+                    {max:12,message:'用戶名最多12位'},
+                    {pattern:/^[a-zA-Z0-9_]+$/,message:"用戶名必須是英文數字下划線組成"}
+                  ]
+                })(
                 <Input
                   prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   placeholder="用戶名"
