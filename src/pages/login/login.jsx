@@ -10,7 +10,10 @@ import logo from '../../assets/images/logo.png'
  class Login extends Component {
 
   handleSubmit = (event)=>{
-
+    event.preventDefault()
+    const form = this.props.form
+    const values = form.getFieldsValue()
+    console.log('handleSubmit',values);
   }
 
   render() {
@@ -29,17 +32,25 @@ import logo from '../../assets/images/logo.png'
           <h2>用戶登陸</h2>
           <Form onSubmit={this.handleSubmit} className="login-form">
             <Form.Item>    
+              {
+                getFieldDecorator('username',{})(
                 <Input
                   prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   placeholder="用戶名"
                 />
+                )
+              }
             </Form.Item>
             <Form.Item>             
+              {
+                getFieldDecorator('password',{})(
                 <Input
                   prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   type="password"
                   placeholder="密碼"
                 />
+                )
+              }
             </Form.Item>
             <Form.Item>
               <Button type="primary" htmlType="submit" className="login-form-button">
