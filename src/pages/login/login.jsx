@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Form, Icon, Input, Button } from 'antd';
 import './login.less'
 import logo from '../../assets/images/logo.png'
+import {reqLogin} from '../../api'
 // 登陸的路由組件
 
 // const Item = Form.Item 
@@ -12,10 +13,17 @@ import logo from '../../assets/images/logo.png'
   handleSubmit = (event)=>{
     event.preventDefault()
     // 對所有表單字段進行校驗
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields(async(err, values) => {
       // 校驗成功
       if (!err) {
         console.log('提交AJAX請求', values);
+        const {username,password} = values
+        try {
+          const response = await reqLogin(username,password)
+          console.log('請求成功了',response.data)
+        } catch (error) {
+          console.log('請求出錯了',error)
+        }
       } else{
         console.log("校驗失敗")
       }
