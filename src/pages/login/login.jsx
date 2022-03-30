@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button,message } from 'antd';
 import './login.less'
 import logo from '../../assets/images/logo.png'
 import {reqLogin} from '../../api'
@@ -19,8 +19,16 @@ import {reqLogin} from '../../api'
         console.log('提交AJAX請求', values);
         const {username,password} = values
       
-          const response = await reqLogin(username,password)
-          console.log('請求成功了',response.data)
+          const result = await reqLogin(username,password)
+          console.log('請求成功了')
+          // const result = response.data
+          if(result.status===0){
+            message.success('登陸成功')
+            this.props.history.replace('/')
+          } else{
+            message.error(result.msg)
+          }
+
         
       } else{
         console.log("校驗失敗")
