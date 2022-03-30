@@ -3,6 +3,7 @@ import { Form, Icon, Input, Button,message } from 'antd';
 import './login.less'
 import logo from '../../assets/images/logo.png'
 import {reqLogin} from '../../api'
+import memoryUtils from '../../utils/memoryUtils';
 // 登陸的路由組件
 
 // const Item = Form.Item 
@@ -24,6 +25,9 @@ import {reqLogin} from '../../api'
           // const result = response.data
           if(result.status===0){
             message.success('登陸成功')
+            const user = result.data
+            memoryUtils.user = user
+            // 事件回調用跳轉
             this.props.history.replace('/')
           } else{
             message.error(result.msg)
