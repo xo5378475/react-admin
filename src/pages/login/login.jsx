@@ -11,9 +11,15 @@ import logo from '../../assets/images/logo.png'
 
   handleSubmit = (event)=>{
     event.preventDefault()
-    const form = this.props.form
-    const values = form.getFieldsValue()
-    console.log('handleSubmit',values);
+    // 對所有表單字段進行校驗
+    this.props.form.validateFields((err, values) => {
+      // 校驗成功
+      if (!err) {
+        console.log('提交AJAX請求', values);
+      } else{
+        console.log("校驗失敗")
+      }
+    });
   }
 
   validatePwd = (rule,value,callback)=>{
