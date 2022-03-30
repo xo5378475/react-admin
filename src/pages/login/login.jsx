@@ -18,12 +18,10 @@ import {reqLogin} from '../../api'
       if (!err) {
         console.log('提交AJAX請求', values);
         const {username,password} = values
-        try {
+      
           const response = await reqLogin(username,password)
           console.log('請求成功了',response.data)
-        } catch (error) {
-          console.log('請求出錯了',error)
-        }
+        
       } else{
         console.log("校驗失敗")
       }
