@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import './index.less'
 import logo from '../../assets/images/logo.png'
-import { Link } from 'react-router-dom'
+import { Link ,withRouter} from 'react-router-dom'
 import { Menu, Icon } from 'antd';
 import menuList from '../../config/menuConfig'
 
 const { SubMenu } = Menu;
 
-export default class LeftNav extends Component {
+ class LeftNav extends Component {
 //  使用MAP + 遞歸
   getMenuNodes_map = (menuList)=>{
     return menuList.map(item=>{
@@ -83,6 +83,8 @@ export default class LeftNav extends Component {
   }
 
   render() {
+    const path = this.props.location.pathname
+
     return (
       <div className='left-nav'>
         <Link to='/' className='left-nav-header'>
@@ -93,6 +95,7 @@ export default class LeftNav extends Component {
 
           mode="inline"
           theme="dark"
+          selectedKeys={[path]}
 
         >
           {/* 
@@ -144,3 +147,12 @@ export default class LeftNav extends Component {
     )
   }
 }
+
+/**
+ * withRouter 高階組件
+ * 包裝非路由組件,返回一個新的組件
+ * 新的組件向非路由組件傳遞3個屬性 :history location match
+ * 
+ */
+
+export default withRouter(LeftNav)
