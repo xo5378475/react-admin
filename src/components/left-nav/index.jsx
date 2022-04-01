@@ -2,23 +2,52 @@ import React, { Component } from 'react'
 import './index.less'
 import logo from '../../assets/images/logo.png'
 import { Link } from 'react-router-dom'
-
-
 import { Menu, Icon } from 'antd';
+import menuList from '../../config/menuConfig'
 
 const { SubMenu } = Menu;
 
 export default class LeftNav extends Component {
-
-  state = {
-    collapsed: false,
-  };
-
-  toggleCollapsed = () => {
-    this.setState({
-      collapsed: !this.state.collapsed,
-    });
-  };
+//  使用MAP + 遞歸
+  getMenuNodes = (menuList)=>{
+    return menuList.map(item=>{
+      /**
+       * {
+       *    title:'首頁',
+       *    key:'/home',
+       *    icon:'home',
+       *    children:[] 可能有 可能沒有
+       * }
+       */
+      if(!item.children){
+        return(
+          <Menu.Item key={item.key}>
+            <Link to={item.key}>
+              <Icon type={item.icon} />
+              <span>{item.title}</span>
+            </Link>
+          </Menu.Item>
+        )
+      } else{
+        return(
+          <SubMenu
+            key={item.key}
+            title={
+              <span>
+                <Icon type={item.icon} />
+                <span>{item.title}</span>
+              </span>
+            }
+          >
+            {
+              this.getMenuNodes(item.children)
+            }
+          
+          </SubMenu>
+        )
+      }
+    })
+  }
 
   render() {
     return (
@@ -33,6 +62,7 @@ export default class LeftNav extends Component {
           theme="dark"
 
         >
+          {/* 
           <Menu.Item key="/home">
             <Link to='/home'>
               <Icon type="pie-chart" />
@@ -72,7 +102,10 @@ export default class LeftNav extends Component {
               <Icon type="pie-chart" />
               <span>人員管理</span>
             </Link>
-          </Menu.Item>
+          </Menu.Item> */}
+          {
+            this.getMenuNodes(menuList)
+          }
         </Menu>
       </div>
     )
