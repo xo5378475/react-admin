@@ -33,9 +33,11 @@ export default class LeftNav extends Component {
           theme="dark"
 
         >
-          <Menu.Item key="1">
-            <Icon type="pie-chart" />
-            <span>首頁</span>
+          <Menu.Item key="/home">
+            <Link to='/home'>
+              <Icon type="pie-chart" />
+              <span>首頁</span>
+            </Link>
           </Menu.Item>
           <SubMenu
             key="sub1"
@@ -46,15 +48,31 @@ export default class LeftNav extends Component {
               </span>
             }
           >
-            <Menu.Item key="5">
-              <Icon type="mail" />
-              <span>品類管理</span> 
+            <Menu.Item key="/category">
+              <Link to='/category'>
+                <Icon type="mail" />
+                <span>品類管理</span> 
+              </Link>
             </Menu.Item>
-            <Menu.Item key="6">
-              <Icon type="mail" />
-              <span>商品管理</span>
+            <Menu.Item key="/product">
+              <Link to='/product'>
+                <Icon type="mail" />
+                <span>商品管理</span>
+              </Link>
             </Menu.Item>
           </SubMenu>
+          <Menu.Item key="/role">
+            <Link to='/role'>
+              <Icon type="pie-chart" />
+              <span>角色管理</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="/user">
+            <Link to='/user'>
+              <Icon type="pie-chart" />
+              <span>人員管理</span>
+            </Link>
+          </Menu.Item>
         </Menu>
       </div>
     )
