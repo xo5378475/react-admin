@@ -4,6 +4,9 @@ import './login.less'
 import logo from '../../assets/images/logo.png'
 import {reqLogin} from '../../api'
 import memoryUtils from '../../utils/memoryUtils';
+import storageUtils from '../../utils/storageUtils';
+import { Redirect } from 'react-router-dom';
+
 // 登陸的路由組件
 
 // const Item = Form.Item 
@@ -27,6 +30,7 @@ import memoryUtils from '../../utils/memoryUtils';
             message.success('登陸成功')
             const user = result.data
             memoryUtils.user = user
+            storageUtils.saveUser(user)
             // 事件回調用跳轉
             this.props.history.replace('/')
           } else{
@@ -56,6 +60,12 @@ import memoryUtils from '../../utils/memoryUtils';
   }
 
   render() {
+    // 如果已登錄 自動跳轉至管理介面
+    const user = memoryUtils.user
+    if(user && user._id){
+      return <Redirect to="/"></Redirect>
+    }
+
 
     const form = this.props.form
 
