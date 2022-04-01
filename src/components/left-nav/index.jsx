@@ -9,7 +9,7 @@ const { SubMenu } = Menu;
 
 export default class LeftNav extends Component {
 //  使用MAP + 遞歸
-  getMenuNodes = (menuList)=>{
+  getMenuNodes_map = (menuList)=>{
     return menuList.map(item=>{
       /**
        * {
@@ -47,6 +47,39 @@ export default class LeftNav extends Component {
         )
       }
     })
+  }
+
+  getMenuNodes = (menuList)=>{
+    return menuList.reduce((pre,item)=>{
+      if (!item.children) {
+        pre.push((
+          <Menu.Item key={item.key}>
+            <Link to={item.key}>
+              <Icon type={item.icon} />
+              <span>{item.title}</span>
+            </Link>
+          </Menu.Item>
+        ))
+      } else {
+        pre.push((
+          <SubMenu
+            key={item.key}
+            title={
+              <span>
+                <Icon type={item.icon} />
+                <span>{item.title}</span>
+              </span>
+            }
+          >
+            {
+              this.getMenuNodes(item.children)
+            }
+          
+          </SubMenu>
+        ))
+      }
+      return pre
+    },[])
   }
 
   render() {
