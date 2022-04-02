@@ -61,6 +61,13 @@ const { SubMenu } = Menu;
           </Menu.Item>
         ))
       } else {
+        const path = this.props.location.pathname
+        // Array.prototype.find() 會回傳第一個滿足所提供之測試函式的元素值。否則回傳 undefined。
+        const cItem = item.children.find(cItem => cItem.key===path )
+        if(cItem){
+          this.openKey = item.key
+        }
+
         pre.push((
           <SubMenu
             key={item.key}
@@ -82,6 +89,11 @@ const { SubMenu } = Menu;
     },[])
   }
 
+  // 在第一次render()執行一次 // v16 可用 v17 已棄
+  componentWillMount(){
+    this.menuNodes = this.getMenuNodes(menuList)
+  }
+
   render() {
     const path = this.props.location.pathname
 
@@ -96,6 +108,7 @@ const { SubMenu } = Menu;
           mode="inline"
           theme="dark"
           selectedKeys={[path]}
+          defaultOpenKeys={[this.openKey]}
 
         >
           {/* 
@@ -140,7 +153,7 @@ const { SubMenu } = Menu;
             </Link>
           </Menu.Item> */}
           {
-            this.getMenuNodes(menuList)
+            this.menuNodes
           }
         </Menu>
       </div>
