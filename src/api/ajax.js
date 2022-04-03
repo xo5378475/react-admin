@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { message } from 'antd'
 
+
 // 統一處理錯誤
 
 export default function ajax(url, data = {}, type = "GET") {

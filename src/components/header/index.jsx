@@ -1,9 +1,18 @@
 import React, { Component } from 'react'
 import './index.less'
+import { reqWeather } from '../../api'
 
 
 export default class Header extends Component {
+
+  getWeather = async(city)=>{
+    const weather = await reqWeather(city)
+    var record = JSON.parse(weather.data)
+    record = record.records.location[0].weatherElement[0].time[0].parameter.parameterName
+  }
+
   render() {
+    this.getWeather('高雄市')
     return (
       <div className='header'>
         <div className="header-top">
