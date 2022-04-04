@@ -2,9 +2,12 @@ import React, { Component } from 'react'
 import './index.less'
 import { reqWeather } from '../../api'
 import { formateDate } from '../../utils/dateUtils'
+import { withRouter } from 'react-router-dom'
 import memoryUtils from '../../utils/memoryUtils'
+import menuList from '../../config/menuConfig'
 
-export default class Header extends Component {
+
+ class Header extends Component {
 
   state={
     currentTime:formateDate(Date.now()),
@@ -16,6 +19,22 @@ export default class Header extends Component {
       const currentTime = formateDate(Date.now())
       this.setState({currentTime})
     },1000)
+  }
+
+  getTitle = () =>{
+    const path = this.props.location.pathname
+    let title
+    menuList.forEach(item=>{
+      if(item.key===path){
+        title = item.title
+      } else if(item.children){
+        const cItem = item.children.find(cItem=>cItem.key===path)
+        if(cItem){
+          title = cItem.title
+        }
+      }
+    })
+    return title
   }
 
   componentWillMount(){
@@ -34,6 +53,7 @@ export default class Header extends Component {
   render() {
     const {weather,currentTime} = this.state
     const user = memoryUtils.user.username
+    this.title = this.getTitle()
     return (
       <div className='header'>
         <div className="header-top">
@@ -41,7 +61,7 @@ export default class Header extends Component {
           <a href="javascript:">退出</a>
         </div>
         <div className="header-bottom">
-          <div className="header-bottom-left">首頁</div>
+          <div className="header-bottom-left">{this.title}</div>
           <div className="header-bottom-right">
             <span>{currentTime}</span>
         
@@ -52,3 +72,5 @@ export default class Header extends Component {
     )
   }
 }
+
+export default withRouter(Header)
