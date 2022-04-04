@@ -7,7 +7,7 @@ import memoryUtils from '../../utils/memoryUtils'
 import menuList from '../../config/menuConfig'
 import { Modal } from 'antd';
 import storageUtils from '../../utils/storageUtils'
-
+import LinkButton from '../link-button'
 
 
 
@@ -81,7 +81,10 @@ import storageUtils from '../../utils/storageUtils'
       <div className='header'>
         <div className="header-top">
           <span>歡迎, {user}</span>
-          <a href="javascript:" onClick={this.logout}>退出</a>
+          <LinkButton onClick={this.logout}>
+            退出
+          </LinkButton>
+          {/* <a href="javascript:" onClick={this.logout}>退出</a> */}
         </div>
         <div className="header-bottom">
           <div className="header-bottom-left">{this.title}</div>
