@@ -1,28 +1,19 @@
 import React, { Component } from 'react'
-import { Card, Table, Button, Icon } from 'antd'
+import { Card, Table, Button, Icon ,message} from 'antd'
 import LinkButton from '../../components/link-button'
-
+import { reqCategorys } from '../../api'
 
 // 商品分類路由
 export default class Category extends Component {
-  render() {
-    const title = '一級分類列表'
-    const extra = (
-      <Button type='primary'>
-        <Icon type='plus'></Icon>
-        添加
-      </Button>
-    )
-    const dataSource = [
 
-      { "parentId": "0", "_id": "624c7bc1b330242cbc091112", "name": "家用電器", "__v": 0 }, 
-      { "parentId": "0", "_id": "624c7c04b330242cbc091113", "name": "電腦", "__v": 0 },
-       { "parentId": "0", "_id": "624c7c10b330242cbc091114", "name": "圖書", "__v": 0 }, 
-       { "parentId": "0", "_id": "624c7c15b330242cbc091115", "name": "服飾", "__v": 0 }, 
-       { "parentId": "0", "_id": "624c7c55b330242cbc091116", "name": "食品", "__v": 0 }
-    ];
+  state = {
+    loading:false, //現在是否在讀取數據
+    categorys:[] // 一級分類列表
+  }
 
-    const columns = [
+  // 初始化Table所有column數組
+  initColumns = ()=>{
+    this.columns = [
       {
         title: '分類的名稱',
         dataIndex: 'name',
@@ -42,13 +33,60 @@ export default class Category extends Component {
       },
     
     ];
+    
+  }
+
+  getCategorys= async ()=>{
+    this.setState({loading:true})
+    const result = await reqCategorys('0')
+    this.setState({loading:false})
+    if (result.status===0){
+      const categorys = result.data
+      this.setState({
+        categorys
+      })
+    } else{
+      message.error('獲取分類列表失敗')
+    }
+  }
+
+
+  componentWillMount(){
+    this.initColumns()
+  }
+
+  componentDidMount(){
+    this.getCategorys()
+  }
+
+  render() {
+    const title = '一級分類列表'
+    const extra = (
+      <Button type='primary'>
+        <Icon type='plus'></Icon>
+        添加
+      </Button>
+    )
+    const dataSource = [
+
+      { "parentId": "0", "_id": "624c7bc1b330242cbc091112", "name": "家用電器", "__v": 0 }, 
+      { "parentId": "0", "_id": "624c7c04b330242cbc091113", "name": "電腦", "__v": 0 },
+       { "parentId": "0", "_id": "624c7c10b330242cbc091114", "name": "圖書", "__v": 0 }, 
+       { "parentId": "0", "_id": "624c7c15b330242cbc091115", "name": "服飾", "__v": 0 }, 
+       { "parentId": "0", "_id": "624c7c55b330242cbc091116", "name": "食品", "__v": 0 }
+    ];
+
+
+    const {categorys} = this.state
     return (
       <Card title={title} extra={extra} >
         <Table 
           bordered
-          dataSource={dataSource} 
-          columns={columns} 
+          dataSource={categorys} 
+          columns={this.columns} 
+          loading={this.state.loading}
           rowKey='_id' // 指定key
+          pagination={{defaultPageSize:5,showQuickJumper:true}}
         />;
       </Card>
     )
