@@ -5,6 +5,8 @@ import Admin from './pages/admin/admin'
 import { Route,BrowserRouter,Switch } from 'react-router-dom'
 
 
+
+
 export default class App extends Component {
   render() {
     return (
