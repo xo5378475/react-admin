@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Table, Button, Icon, message } from 'antd'
+import { Card, Table, Button, Icon, message, Modal } from 'antd'
 import LinkButton from '../../components/link-button'
 import { reqCategorys } from '../../api'
 
@@ -11,7 +11,8 @@ export default class Category extends Component {
     categorys: [],// 一級分類列表
     subCategorys: [], // 二級分類列表
     parentId: '0',// 當前需要顯示的分類列表的父分類ID
-    parentName: ''// 當前需要顯示的分類列表的父分類名稱
+    parentName: '',// 當前需要顯示的分類列表的父分類名稱
+    showStatus: 0 // 標識添加/更新的確認框是否顯示 0 :不顯示 1:顯示添加 2:顯示更新
   }
 
   // 初始化Table所有column數組
@@ -29,11 +30,11 @@ export default class Category extends Component {
         key: 'action',
         render: (category) => {
           return (<span>
-            <LinkButton>修改分類</LinkButton>
+            <LinkButton onClick={this.showUpdate}>修改分類</LinkButton>
             {
-              this.state.parentId==='0'?<LinkButton onClick={() => this.showSubCategorys(category)} >查看子分類</LinkButton>:null
+              this.state.parentId === '0' ? <LinkButton onClick={() => this.showSubCategorys(category)} >查看子分類</LinkButton> : null
             }
-            
+
           </span>)
         }
       },
@@ -66,12 +67,12 @@ export default class Category extends Component {
   }
 
   // 顯示指定的一級分類列表
-  showCategorys = ()=>{
+  showCategorys = () => {
     // 更新顯示為一列表的狀態
     this.setState({
-      parentId:'0',
-      parentName:'',
-      subCategorys:[]
+      parentId: '0',
+      parentName: '',
+      subCategorys: []
     })
   }
 
@@ -87,6 +88,36 @@ export default class Category extends Component {
     // setState() 不能立即獲取最新的狀態: 因為setState()是異步更新的狀態
   }
 
+  // 響應點即取消隱藏確定框
+  handleCancel = () => {
+    this.setState({
+      showStatus: 0
+    })
+  }
+
+  showAdd = () => {
+    this.setState({
+      showStatus: 1
+    })
+  }
+
+  showUpdate = () => {
+    this.setState({
+      showStatus: 2
+    })
+  }
+
+  // 添加分類
+  addCategory = () => {
+    console.log('addCategory()')
+  }
+
+  updateCategory = () => {
+    console.log('updateCategory()');
+  }
+
+
+
   componentWillMount() {
     this.initColumns()
   }
@@ -96,16 +127,16 @@ export default class Category extends Component {
   }
 
   render() {
-    const { categorys, subCategorys, parentId, parentName } = this.state
-    const title = parentId === '0' ? '一級分類列表':(
+    const { categorys, subCategorys, parentId, parentName, showStatus } = this.state
+    const title = parentId === '0' ? '一級分類列表' : (
       <span>
         <LinkButton onClick={this.showCategorys}>一級分類列表</LinkButton>
-        <Icon type='arrow-right' style={{marginRight:5}}></Icon>
+        <Icon type='arrow-right' style={{ marginRight: 5 }}></Icon>
         <span>{parentName}</span>
       </span>
     )
     const extra = (
-      <Button type='primary'>
+      <Button type='primary' onClick={this.showAdd}>
         <Icon type='plus'></Icon>
         添加
       </Button>
@@ -130,6 +161,22 @@ export default class Category extends Component {
           rowKey='_id' // 指定key
           pagination={{ defaultPageSize: 5, showQuickJumper: true }}
         />;
+        <Modal title="添加分類"
+          visible={showStatus === 1}
+          onOk={this.addCategory}
+          onCancel={this.handleCancel}>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+        </Modal>
+        <Modal title="更新分類"
+          visible={showStatus === 2}
+          onOk={this.updateCategory}
+          onCancel={this.handleCancel}>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+        </Modal>
       </Card>
     )
   }
