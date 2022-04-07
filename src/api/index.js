@@ -1,11 +1,21 @@
 import ajax from "./ajax";
 import { message } from 'antd'
 
+const BASE = ''
+
 // 登陸
-export const reqLogin = (username,password) => ajax('/login',{username,password},'POST')
+export const reqLogin = (username,password) => ajax(BASE + '/login',{username,password},'POST')
+
+// 獲取一級/二級分類的列表
+export const reqCategorys = (parentId) => ajax(BASE+'/manage/category/list',{parentId})
+// 添加分類
+export const reqAddCategory = (categoryName,parentId)=> ajax(BASE+'/manage/category/add',{categoryName,parentId},'POST')
+// 更改分類
+export const reqUpdateCategory =({categoryName,parentId})=> ajax(BASE+'/manage/category/update',{categoryName,parentId},'POST')
 
 
-export const reqAddUser = (user) => ajax('/manage/user/add',user,'POST')
+//添加用戶
+export const reqAddUser = (user) => ajax(BASE + '/manage/user/add',user,'POST')
 
 export const reqWeather = (city) => {
 
