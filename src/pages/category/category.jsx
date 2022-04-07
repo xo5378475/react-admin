@@ -30,7 +30,10 @@ export default class Category extends Component {
         render: (category) => {
           return (<span>
             <LinkButton>修改分類</LinkButton>
-            <LinkButton onClick={() => this.showSubCategorys(category)} >查看子分類</LinkButton>
+            {
+              this.state.parentId==='0'?<LinkButton onClick={() => this.showSubCategorys(category)} >查看子分類</LinkButton>:null
+            }
+            
           </span>)
         }
       },
@@ -62,6 +65,16 @@ export default class Category extends Component {
     }
   }
 
+  // 顯示指定的一級分類列表
+  showCategorys = ()=>{
+    // 更新顯示為一列表的狀態
+    this.setState({
+      parentId:'0',
+      parentName:'',
+      subCategorys:[]
+    })
+  }
+
   // 顯示指定一級分類對象的二級子列表
   showSubCategorys = (category) => {
     this.setState({
@@ -83,7 +96,14 @@ export default class Category extends Component {
   }
 
   render() {
-    const title = '一級分類列表'
+    const { categorys, subCategorys, parentId, parentName } = this.state
+    const title = parentId === '0' ? '一級分類列表':(
+      <span>
+        <LinkButton onClick={this.showCategorys}>一級分類列表</LinkButton>
+        <Icon type='arrow-right' style={{marginRight:5}}></Icon>
+        <span>{parentName}</span>
+      </span>
+    )
     const extra = (
       <Button type='primary'>
         <Icon type='plus'></Icon>
@@ -100,7 +120,6 @@ export default class Category extends Component {
     ];
 
 
-    const { categorys, subCategorys, parentId, parentName } = this.state
     return (
       <Card title={title} extra={extra} >
         <Table
