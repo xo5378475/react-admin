@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Card, Table, Button, Icon, message, Modal } from 'antd'
 import LinkButton from '../../components/link-button'
 import { reqCategorys } from '../../api'
+import AddForm from './add-form'
+import UpdateForm from './update-form'
 
 // 商品分類路由
 export default class Category extends Component {
@@ -165,17 +167,13 @@ export default class Category extends Component {
           visible={showStatus === 1}
           onOk={this.addCategory}
           onCancel={this.handleCancel}>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          <AddForm></AddForm>
         </Modal>
         <Modal title="更新分類"
           visible={showStatus === 2}
           onOk={this.updateCategory}
           onCancel={this.handleCancel}>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          <UpdateForm></UpdateForm>
         </Modal>
       </Card>
     )
