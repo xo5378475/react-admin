@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Card, Table, Button, Icon, message, Modal } from 'antd'
 import LinkButton from '../../components/link-button'
-import { reqCategorys } from '../../api'
+import { reqCategorys, reqAddCategory, reqUpdateCategory } from '../../api'
 import AddForm from './add-form'
 import UpdateForm from './update-form'
 
@@ -32,7 +32,7 @@ export default class Category extends Component {
         key: 'action',
         render: (category) => {
           return (<span>
-            <LinkButton onClick={this.showUpdate}>修改分類</LinkButton>
+            <LinkButton onClick={() => this.showUpdate(category)}>修改分類</LinkButton>
             {
               this.state.parentId === '0' ? <LinkButton onClick={() => this.showSubCategorys(category)} >查看子分類</LinkButton> : null
             }
@@ -92,6 +92,7 @@ export default class Category extends Component {
 
   // 響應點即取消隱藏確定框
   handleCancel = () => {
+    this.form.resetFields()
     this.setState({
       showStatus: 0
     })
@@ -103,7 +104,9 @@ export default class Category extends Component {
     })
   }
 
-  showUpdate = () => {
+  showUpdate = (category) => {
+    // 保存分類對象
+    this.category = category
     this.setState({
       showStatus: 2
     })
@@ -114,8 +117,23 @@ export default class Category extends Component {
     console.log('addCategory()')
   }
 
-  updateCategory = () => {
+  updateCategory = async () => {
     console.log('updateCategory()');
+    // 隱藏確定框
+    this.setState({
+      showStatus: 0
+    })
+
+    const categoryId = this.category._id
+    const categoryName = this.form.getFieldValue('categoryName')
+  
+    // 清除輸入數據
+    this.form.resetFields()
+    const result = await reqUpdateCategory({ categoryId ,categoryName})
+    if (result.status === 0) {
+      // 重新顯示列表
+      this.getCategorys()
+    }
   }
 
 
@@ -130,6 +148,8 @@ export default class Category extends Component {
 
   render() {
     const { categorys, subCategorys, parentId, parentName, showStatus } = this.state
+    const category = this.category
+
     const title = parentId === '0' ? '一級分類列表' : (
       <span>
         <LinkButton onClick={this.showCategorys}>一級分類列表</LinkButton>
@@ -173,7 +193,10 @@ export default class Category extends Component {
           visible={showStatus === 2}
           onOk={this.updateCategory}
           onCancel={this.handleCancel}>
-          <UpdateForm></UpdateForm>
+          <UpdateForm
+            categoryName={category ? category.name : ''}
+            setForm={(form) => { this.form = form }}
+          ></UpdateForm>
         </Modal>
       </Card>
     )
