@@ -45,10 +45,10 @@ export default class Category extends Component {
 
   }
 
-  getCategorys = async () => {
+  getCategorys = async (parentId) => {
 
     this.setState({ loading: true })
-    const { parentId } = this.state
+    parentId = parentId || this.state.parentId
     const result = await reqCategorys(parentId)
     this.setState({ loading: false })
     if (result.status === 0) {
@@ -113,27 +113,59 @@ export default class Category extends Component {
   }
 
   // 添加分類
-  addCategory = () => {
+  addCategory = async () => {
     console.log('addCategory()')
+
+
+    this.form.validateFields(async (err, values) => {
+      if (!err) {
+        this.setState({
+          showStatus: 0
+        })
+        const { parentId, categoryName } = values
+        console.log(categoryName)
+        this.form.resetFields()
+        const result = await reqAddCategory(categoryName, parentId)
+        if (result.status === 0) {
+          // 添加的分類就是當前分類列表下的分類
+          if (parentId === this.state.parentId) {
+            // 
+            this.getCategorys()
+          } else if (parentId === '0') { // 在二級分類列表下添加一級分類 重新獲取一級分類列表 但不需要顯示一級列表
+            //
+            this.getCategorys('0')
+          }
+        }
+      }
+
+
+    })
   }
+
 
   updateCategory = async () => {
     console.log('updateCategory()');
     // 隱藏確定框
-    this.setState({
-      showStatus: 0
-    })
 
-    const categoryId = this.category._id
-    const categoryName = this.form.getFieldValue('categoryName')
-  
-    // 清除輸入數據
-    this.form.resetFields()
-    const result = await reqUpdateCategory({ categoryId ,categoryName})
-    if (result.status === 0) {
-      // 重新顯示列表
-      this.getCategorys()
-    }
+
+    // 進行表單驗證 
+    this.form.validateFields(async (err, values) => {
+      if (!err) {
+        this.setState({
+          showStatus: 0
+        })
+        const categoryId = this.category._id
+        const { categoryName } = values
+        // 清除輸入數據
+        this.form.resetFields()
+        const result = await reqUpdateCategory({ categoryId, categoryName })
+        if (result.status === 0) {
+          // 重新顯示列表
+
+          this.getCategorys()
+        }
+      }
+    })
   }
 
 
@@ -163,14 +195,14 @@ export default class Category extends Component {
         添加
       </Button>
     )
-    const dataSource = [
+    // const dataSource = [
 
-      { "parentId": "0", "_id": "624c7bc1b330242cbc091112", "name": "家用電器", "__v": 0 },
-      { "parentId": "0", "_id": "624c7c04b330242cbc091113", "name": "電腦", "__v": 0 },
-      { "parentId": "0", "_id": "624c7c10b330242cbc091114", "name": "圖書", "__v": 0 },
-      { "parentId": "0", "_id": "624c7c15b330242cbc091115", "name": "服飾", "__v": 0 },
-      { "parentId": "0", "_id": "624c7c55b330242cbc091116", "name": "食品", "__v": 0 }
-    ];
+    //   { "parentId": "0", "_id": "624c7bc1b330242cbc091112", "name": "家用電器", "__v": 0 },
+    //   { "parentId": "0", "_id": "624c7c04b330242cbc091113", "name": "電腦", "__v": 0 },
+    //   { "parentId": "0", "_id": "624c7c10b330242cbc091114", "name": "圖書", "__v": 0 },
+    //   { "parentId": "0", "_id": "624c7c15b330242cbc091115", "name": "服飾", "__v": 0 },
+    //   { "parentId": "0", "_id": "624c7c55b330242cbc091116", "name": "食品", "__v": 0 }
+    // ];
 
 
     return (
@@ -187,7 +219,11 @@ export default class Category extends Component {
           visible={showStatus === 1}
           onOk={this.addCategory}
           onCancel={this.handleCancel}>
-          <AddForm></AddForm>
+          <AddForm
+            parentId={parentId}
+            categorys={categorys}
+            setForm={(form) => this.form = form}
+          ></AddForm>
         </Modal>
         <Modal title="更新分類"
           visible={showStatus === 2}

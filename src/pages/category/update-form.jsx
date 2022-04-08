@@ -28,7 +28,8 @@ class UpdateForm extends Component {
         <Item>
           {
             getFieldDecorator('categoryName',{
-              initialValue:categoryName
+              initialValue:categoryName,
+              rules:[{required:true,message:'分類名稱必須輸入'}]
             })(
               <Input placeholder='請輸入分類名稱'></Input>
             )
