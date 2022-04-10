@@ -19,6 +19,14 @@ export const reqUpdateCategory =({categoryName,categoryId})=> {
 // 商品分頁列表
 export const reqProducts = (pageNum,pageSize)=> ajax(BASE+'/manage/product/list',{pageNum,pageSize})
 
+// 搜索商品分頁列表
+// searchType 搜索的類型 productName/productDesc
+export const reqSearchProducts = ({pageNum,pageSize,searchName,searchType})=>ajax(BASE+'/manage/product/search',{
+   pageNum,
+   pageSize,
+   [searchType]:searchName// 要把變量作為屬性 需加[]
+})
+
 
 //添加用戶
 export const reqAddUser = (user) => ajax(BASE + '/manage/user/add',user,'POST')

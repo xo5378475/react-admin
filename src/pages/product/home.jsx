@@ -8,7 +8,7 @@ import {
   Table
 } from 'antd'
 import LinkButton from '../../components/link-button/'
-import {reqProducts} from '../../api'
+import {reqProducts,reqSearchProducts} from '../../api'
 import { PAGE_SIZE } from '../../utils/constants'
 const Option = Select.Option
 
@@ -17,7 +17,9 @@ export default class ProductHome extends Component {
   state = {
     total:0,
     products: [],// 商品數組
-    loading:false
+    loading:false,
+    searchName:'',// 搜索的關鍵字
+    searchType:'productName',// 根據哪個字段搜索
   }
 
   initColumns = () => {
@@ -68,7 +70,13 @@ export default class ProductHome extends Component {
 
   getProducts = async(pageNum)=>{
     this.setState({loading:true})
-    const result = await reqProducts(pageNum,PAGE_SIZE)
+    const {searchName,searchType} = this.state
+    let result
+    if(searchName){
+      result = await reqSearchProducts({pageNum,pageSize:PAGE_SIZE,searchName,searchType})
+    } else{
+      result = await reqProducts(pageNum,PAGE_SIZE)
+    }
     this.setState({loading:false})
     if(result.status===0){
       const {total,list} = result.data
@@ -88,17 +96,26 @@ export default class ProductHome extends Component {
   }
 
   render() {
-    const { products,total,loading } = this.state
+    const { products,total,loading,searchName,searchType } = this.state
 
 
     const title = (
       <span>
-        <Select value='1' style={{ width: 150 }}>
-          <Option value='1'>按名稱搜索</Option>
-          <Option value='2'>按描述搜索</Option>
+        <Select 
+          value={searchType} 
+          style={{ width: 150 }}
+          onChange={value=>this.setState({searchType:value})}
+        >
+          <Option value='productName'>按名稱搜索</Option>
+          <Option value='productDesc'>按描述搜索</Option>
         </Select>
-        <Input placeholder='關鍵字' style={{ width: 150, margin: '0 15px' }} />
-        <Button type='primary'>搜索</Button>
+        <Input 
+          placeholder='關鍵字' 
+          style={{ width: 150, margin: '0 15px' }} 
+          value={searchName} 
+          onChange={event=>this.setState({searchName:event.target.value})}  
+        />
+        <Button type='primary' onClick={()=>this.getProducts(1)}>搜索</Button>
       </span>
     )
 
