@@ -16,6 +16,9 @@ export const reqUpdateCategory =({categoryName,categoryId})=> {
    return ajax(BASE+'/manage/category/update',{categoryName,categoryId},'POST')
 }
 
+// 商品分頁列表
+export const reqProducts = (pageNum,pageSize)=> ajax(BASE+'/manage/product/list',{pageNum,pageSize})
+
 
 //添加用戶
 export const reqAddUser = (user) => ajax(BASE + '/manage/user/add',user,'POST')
