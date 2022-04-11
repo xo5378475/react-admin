@@ -57,7 +57,8 @@ export default class ProductHome extends Component {
         render:(product)=>{
           return (
             <span>
-              <LinkButton>詳情</LinkButton>
+              {/* 將product對象使用state傳遞給目標路由組件 */}
+              <LinkButton onClick={()=>this.props.history.push('/product/detail',{product}) }>詳情</LinkButton>
               <LinkButton>修改</LinkButton>
             </span>
           )

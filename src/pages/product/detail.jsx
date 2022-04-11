@@ -4,13 +4,19 @@ import {
   Icon,
   Card } 
 from 'antd'
+import LinkButton from '../../components/link-button'
+import { BASE_IMG_URL } from '../../utils/constants'
 const Item = List.Item
 
 export default class ProductDetail extends Component {
   render() {
+    console.log(this.props.location.state);
+    const {name,desc,price,detail,imgs} = this.props.location.state.product
     const title = (
       <span>
-        <Icon type='arrow-left'/>
+        <LinkButton >
+          <Icon type='arrow-left' style={{marginRight:15,fontSize:20}} onClick={()=> this.props.history.goBack()}/>
+        </LinkButton>
         <span>商品詳情</span>
       </span>
     )
@@ -19,15 +25,15 @@ export default class ProductDetail extends Component {
         <List>
           <Item>
             <span className='left'>商品名稱:</span>
-            <span>联想ThinkPad 翼4809</span>
+            <span>{name}</span>
           </Item>
           <Item>
             <span className='left'>商品描述:</span>
-            <span>年度重量级新品，X390、T490全新登场 更加轻薄机身设计9</span>
+            <span>{desc}</span>
           </Item>
           <Item>
             <span className='left'>商品價格:</span>
-            <span>66000元</span>
+            <span>{price}元</span>
           </Item>
           <Item>
             <span className='left'>所屬分類:</span>
@@ -35,12 +41,22 @@ export default class ProductDetail extends Component {
           </Item>
           <Item>
             <span className='left'>商品圖片:</span>
-            <span><img className='product-img' src="/hk-notebook-np500r5m-x0ahk-np500r5m-x0ahk-022-front-over-61552492.webp" alt="#" /></span>
-            <span><img className='product-img' src="/hk-notebook-np500r5m-x0ahk-np500r5m-x0ahk-022-front-over-61552492.webp" alt="#" /></span>
+            <span>
+              {
+                imgs.map(img => (
+                  <img
+                    key={img}
+                    className='product-img'
+                    src={BASE_IMG_URL + img}
+                    alt='img'>
+                  </img>
+                ))
+              }
+            </span>
           </Item>
            <Item>
             <span className='left'>商品詳情:</span>
-            <span dangerouslySetInnerHTML={{__html:'<h1 style="color:red;">商品內容詳情標題</h1>'}}></span> {/* dangerouslySetInnerHTML 類似innerHTML功能 */}
+            <span dangerouslySetInnerHTML={{__html:detail}}></span> {/* dangerouslySetInnerHTML 類似innerHTML功能 */}
           </Item>
         </List>
       </Card>
