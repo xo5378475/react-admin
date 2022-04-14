@@ -63,7 +63,7 @@ const { SubMenu } = Menu;
       } else {
         const path = this.props.location.pathname
         // Array.prototype.find() 會回傳第一個滿足所提供之測試函式的元素值。否則回傳 undefined。
-        const cItem = item.children.find(cItem => cItem.key===path )
+        const cItem = item.children.find(cItem => path.indexOf(cItem.key)===0 )
         if(cItem){
           this.openKey = item.key
         }
@@ -95,8 +95,11 @@ const { SubMenu } = Menu;
   }
 
   render() {
-    const path = this.props.location.pathname
+    let path = this.props.location.pathname
+    if(path.indexOf('/product')===0){ //當前請求的是商品或其子路由介面
+      path = '/product'
 
+    }
     return (
       <div className='left-nav'>
         <Link to='/' className='left-nav-header'>
