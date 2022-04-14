@@ -15,6 +15,8 @@ export const reqUpdateCategory =({categoryName,categoryId})=> {
  
    return ajax(BASE+'/manage/category/update',{categoryName,categoryId},'POST')
 }
+// 獲取一個分類
+export const reqCategory = (categoryId) => ajax(BASE+'/manage/category/info',{categoryId})
 
 // 商品分頁列表
 export const reqProducts = (pageNum,pageSize)=> ajax(BASE+'/manage/product/list',{pageNum,pageSize})
