@@ -49,32 +49,36 @@ class ProductAddUpdate extends Component {
     const result = await reqCategorys(parentId)
     if(result.status===0){
       const categorys = result.data
-      this.initOptions(categorys)
+      if(parentId==='0'){
+        this.initOptions(categorys)
+      } else {
+        return categorys
+      }
     }
   }
 
-  loadData = selectedOptions => {
+  loadData = async(selectedOptions) => {
     console.log(selectedOptions);
     const targetOption = selectedOptions[0];
     targetOption.loading = true;
-
-    // load options lazily
-    setTimeout(() => {
-      targetOption.loading = false;
-      targetOption.children = [
-        {
-          label: `${targetOption.label} Dynamic 1`,
-          value: 'dynamic1',
-        },
-        {
-          label: `${targetOption.label} Dynamic 2`,
-          value: 'dynamic2',
-        },
-      ];
+    // 根據選中的分類 請求獲取二級分類列表
+    const subCategorys = await this.getCategorys(targetOption.value)
+    if(subCategorys && subCategorys.length >0){
+      const childOptions = subCategorys.map(c=>({
+        value:c._id,
+        label:c.name,
+        isLeaf:true
+      }))
+      targetOption.children = childOptions
+    } else{ // 當前選中的分類沒有二級分類
+      targetOption.isLeaf = true
+    }
+    targetOption.loading = false
       this.setState({
         options: [...this.state.options],
       });
-    }, 1000);
+    // load options lazily
+      
   };
 
   validatePrice = (rule,value,callback) => {
