@@ -9,10 +9,73 @@ import {
   Button
 } from 'antd'
 import LinkButton from '../../components/link-button'
+import { reqCategorys } from '../../api'
+
 const { Item } = Form
 const { TextArea } = Input
 
+
+const options = [
+  {
+    value:'zhejaing',
+    label:'zhejaing',
+    isLeaf:false
+  },
+  {
+    value:'jiangsu',
+    label:'jiangsu',
+    isLeaf:false
+  }
+]
+
 class ProductAddUpdate extends Component {
+
+  state = {
+    options:[]
+  }
+
+  initOptions = (categorys) => {
+    const options = categorys.map(c=>({
+      value:c._id,
+      label:c.name,
+      isLeaf:false
+    }))
+    this.setState({
+      options:[...options]
+    })
+  }
+
+  getCategorys = async(parentId) => {
+    const result = await reqCategorys(parentId)
+    if(result.status===0){
+      const categorys = result.data
+      this.initOptions(categorys)
+    }
+  }
+
+  loadData = selectedOptions => {
+    console.log(selectedOptions);
+    const targetOption = selectedOptions[0];
+    targetOption.loading = true;
+
+    // load options lazily
+    setTimeout(() => {
+      targetOption.loading = false;
+      targetOption.children = [
+        {
+          label: `${targetOption.label} Dynamic 1`,
+          value: 'dynamic1',
+        },
+        {
+          label: `${targetOption.label} Dynamic 2`,
+          value: 'dynamic2',
+        },
+      ];
+      this.setState({
+        options: [...this.state.options],
+      });
+    }, 1000);
+  };
 
   validatePrice = (rule,value,callback) => {
     console.log(value, typeof value)
@@ -29,6 +92,10 @@ class ProductAddUpdate extends Component {
         console.log(values)
       }
     })
+  }
+
+  componentDidMount(){
+    this.getCategorys('0')
   }
 
   render() {
@@ -85,7 +152,11 @@ class ProductAddUpdate extends Component {
             
           </Item>
           <Item label="商品分類">
-            <div>商品分類</div>
+            <Cascader
+              options={this.state.options}
+              loadData={this.loadData}
+            >
+            </Cascader>
           </Item>
           <Item label="商品圖片">
             <div>商品圖片</div>
