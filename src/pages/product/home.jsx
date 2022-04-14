@@ -5,10 +5,11 @@ import {
   Button,
   Select,
   Icon,
-  Table
+  Table,
+  message
 } from 'antd'
 import LinkButton from '../../components/link-button/'
-import {reqProducts,reqSearchProducts} from '../../api'
+import {reqProducts,reqSearchProducts,reqUpdateStatus} from '../../api'
 import { PAGE_SIZE } from '../../utils/constants'
 const Option = Select.Option
 
@@ -41,12 +42,20 @@ export default class ProductHome extends Component {
       {
         width:100,
         title:'狀態',
-        dataIndex:'status',
-        render:()=>{
+        //dataIndex:'status',
+        render:(product)=>{
+          const {status,_id} = product
+          const newStatus = status === 1 ? 2: 1
+          console.log(status);
           return (
             <span>
-              <Button type='primary'>下架</Button>
-              <span>在售</span>
+              <Button 
+                type='primary'
+                onClick={() => this.updateStatus(_id,newStatus)}
+              >
+                {status===1?'下架':'上架'}
+              </Button>
+              <span>{status===1?'在售':'以下架'}</span>
             </span>
           )
         }
@@ -69,7 +78,16 @@ export default class ProductHome extends Component {
 
   }
 
+  updateStatus = async (productId,status)=>{
+    const result = await reqUpdateStatus(productId,status)
+    if(result.status===0){
+      message.success('更新商品成功')
+      this.getProducts(this.pageNum)
+    }
+  }
+
   getProducts = async(pageNum)=>{
+    this.pageNum = pageNum // 保存pageNum 讓其他方法可以看到
     this.setState({loading:true})
     const {searchName,searchType} = this.state
     let result
