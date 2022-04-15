@@ -34,6 +34,7 @@ export const reqSearchProducts = ({pageNum,pageSize,searchName,searchType})=>aja
    [searchType]:searchName// 要把變量作為屬性 需加[]
 })
 
+export const reqDeleteImg = (name)=> ajax(BASE+'/manage/img/delete',{name},'POST')
 
 //添加用戶
 export const reqAddUser = (user) => ajax(BASE + '/manage/user/add',user,'POST')

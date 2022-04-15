@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Icon, Upload, Modal, message } from 'antd'
+import {reqDeleteImg} from '../../api'
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -38,7 +39,7 @@ export default class PicturesWall extends Component {
     });
   };
 
-  handleChange = ({ file, fileList }) => {
+  handleChange = async({ file, fileList }) => {
     console.log('handelChange()', file, fileList);
     if (file.status === 'done') {
       const result = file.response
@@ -48,10 +49,19 @@ export default class PicturesWall extends Component {
         file = fileList[fileList.length-1] // file 和fileList最後一個元素 指向不同對象 但內容相同 為了 setState 可以感應變更
         file.name = name
         file.url = url
-      } else {
+      }  
+      else {
         message.error('上傳圖片失敗')
       }
-    }
+    } else if(file.status === 'removed' ){
+        console.log(file.name);
+        const result = await reqDeleteImg(file.name)
+        if(result.status===0){
+          message.success('刪除圖片成功')
+        } else{
+          message.error('刪除圖片失敗')
+        }
+      }
     this.setState({ fileList })
   };
 
