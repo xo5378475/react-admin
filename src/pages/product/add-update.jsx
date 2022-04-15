@@ -9,7 +9,8 @@ import {
   Button
 } from 'antd'
 import LinkButton from '../../components/link-button'
-import { reqCategorys } from '../../api'
+import { reqCategorys, reqLogin } from '../../api'
+import PicturesWall from './pictures-wall'
 
 const { Item } = Form
 const { TextArea } = Input
@@ -20,6 +21,12 @@ class ProductAddUpdate extends Component {
 
   state = {
     options: []
+  }
+
+  constructor(props){
+    super(props)
+    // 創建用來保存ref 標示的標籤對象的容器
+    this.pw = React.createRef()
   }
 
   initOptions = async(categorys) => {
@@ -97,6 +104,10 @@ class ProductAddUpdate extends Component {
     this.props.form.validateFields((error, values) => {
       if (!error) {
         console.log(values)
+        console.log(this.pw);
+        const imgs = this.pw.current.getImgs()
+        console.log('imgs',imgs)
+        
       }
     })
   }
@@ -200,7 +211,7 @@ class ProductAddUpdate extends Component {
             }
           </Item>
           <Item label="商品圖片">
-            <div>商品圖片</div>
+            <PicturesWall ref={this.pw}/>
           </Item>
           <Item label="商品詳情">
             <div>商品詳情</div>
@@ -216,3 +227,5 @@ class ProductAddUpdate extends Component {
 }
 
 export default Form.create()(ProductAddUpdate)
+
+// 父組件調用子組件方法 使用ref 取得當前組件對象
