@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Icon, Upload, Modal, message } from 'antd'
 import {reqDeleteImg} from '../../api'
+import {BASE_IMG_URL} from '../../utils/constants'
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -11,13 +13,43 @@ function getBase64(file) {
 }
 
 export default class PicturesWall extends Component {
-  state = {
-    previewVisible: false, // 標示是否大圖預覽
-    previewImage: '', // 大圖的url
-    fileList: [
+
+  static propTypes = {
+    imgs:PropTypes.array
+  }
+
+  // state = {
+  //   previewVisible: false, // 標示是否大圖預覽
+  //   previewImage: '', // 大圖的url
+  //   fileList: [
      
-    ],
-  };
+  //   ],
+  // };
+
+  constructor(props){
+    super(props)
+
+    let fileList = []
+    if(this.props.imgs){
+      const {imgs} = this.props
+      console.log(props,this.props,imgs)
+      if(imgs && imgs.length >0){
+        fileList = imgs.map((img,index)=>({
+          uid:-index,
+          name:img,
+          status:'done',
+          url:BASE_IMG_URL + img
+        }))
+      }
+    }
+    console.log('fileList',fileList);
+    this.state = {
+      previewVisible:false,
+      previewImage:'',
+      fileList
+    }
+  }
+
 
   // 獲取所有已上傳圖片文件名的數組
   getImgs = () => {

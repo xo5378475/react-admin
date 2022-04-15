@@ -131,7 +131,7 @@ class ProductAddUpdate extends Component {
     const {isUpdate,product} = this
        
     if(product){
-      var {pCategoryId,categoryId} = product
+      var {pCategoryId,categoryId,imgs} = product
     }
     // 用來接收級聯分類ID的數組
     const categoryIds = []
@@ -211,7 +211,7 @@ class ProductAddUpdate extends Component {
             }
           </Item>
           <Item label="商品圖片">
-            <PicturesWall ref={this.pw}/>
+            <PicturesWall ref={this.pw} imgs={imgs}/>
           </Item>
           <Item label="商品詳情">
             <div>商品詳情</div>
