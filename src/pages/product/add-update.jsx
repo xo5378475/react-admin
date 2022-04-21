@@ -10,6 +10,7 @@ import {
 } from 'antd'
 import LinkButton from '../../components/link-button'
 import { reqCategorys, reqLogin } from '../../api'
+import RichTextEditor from './rich-text-editor'
 import PicturesWall from './pictures-wall'
 
 const { Item } = Form
@@ -146,7 +147,7 @@ class ProductAddUpdate extends Component {
     // 指定Item布局的配置對象
     const formItemLayout = {
       labelCol: { span: 3 }, // 左側label的寬度
-      wrapperCol: { span: 14 } //指定右側包裹的寬度
+      wrapperCol: { span: 8 } //指定右側包裹的寬度
     }
     const title = (
       <span>
@@ -213,8 +214,9 @@ class ProductAddUpdate extends Component {
           <Item label="商品圖片">
             <PicturesWall ref={this.pw} imgs={imgs}/>
           </Item>
-          <Item label="商品詳情">
-            <div>商品詳情</div>
+     
+          <Item label="商品詳情" labelCol={{span:3}} wrapperCol={{span:18}}>
+            <RichTextEditor/>
           </Item>
           <Item>
             <Button type='primary' onClick={this.submit}>提交</Button>
