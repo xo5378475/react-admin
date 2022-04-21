@@ -28,6 +28,7 @@ class ProductAddUpdate extends Component {
     super(props)
     // 創建用來保存ref 標示的標籤對象的容器
     this.pw = React.createRef()
+    this.editor = React.createRef()
   }
 
   initOptions = async(categorys) => {
@@ -107,8 +108,9 @@ class ProductAddUpdate extends Component {
         console.log(values)
         console.log(this.pw);
         const imgs = this.pw.current.getImgs()
+        const detail = this.editor.current.getDetail()
         console.log('imgs',imgs)
-        
+        console.log('detail',detail)
       }
     })
   }
@@ -132,7 +134,7 @@ class ProductAddUpdate extends Component {
     const {isUpdate,product} = this
        
     if(product){
-      var {pCategoryId,categoryId,imgs} = product
+      var {pCategoryId,categoryId,imgs,detail} = product
     }
     // 用來接收級聯分類ID的數組
     const categoryIds = []
@@ -216,7 +218,7 @@ class ProductAddUpdate extends Component {
           </Item>
      
           <Item label="商品詳情" labelCol={{span:3}} wrapperCol={{span:18}}>
-            <RichTextEditor/>
+            <RichTextEditor ref={this.editor} detail={detail}/>
           </Item>
           <Item>
             <Button type='primary' onClick={this.submit}>提交</Button>
