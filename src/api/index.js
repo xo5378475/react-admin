@@ -40,6 +40,10 @@ export const reqDeleteImg = (name)=> ajax(BASE+'/manage/img/delete',{name},'POST
 export const reqAddOrUpdateProduct = (product) => ajax(BASE+'/manage/product/'+(product._id?'update':'add'),product,'POST')
 //export const reqUpdateProduct = (product) => ajax(BASE+'/manage/product/update',product,'POST')
 
+// 獲取所有角色列表
+export const reqRoles = ()=>ajax(BASE+'/manage/role/list')
+
+
 //添加用戶
 export const reqAddUser = (user) => ajax(BASE + '/manage/user/add',user,'POST')
 

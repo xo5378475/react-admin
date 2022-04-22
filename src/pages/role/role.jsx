@@ -1,41 +1,14 @@
 import React, { Component } from 'react'
 import { Button, Table, Card } from 'antd'
 import { PAGE_SIZE } from '../../utils/constants'
+import { reqRoles } from '../../api'
 import './role.less'
 
 export default class Role extends Component {
 
   state = {
-    roles: [{
-      menus: [
-        '/home'
-      ],
-      "_id": 'sdgdsgasfadfdsagsdgsdg',
-      name: '角色1',
-      create_time: 1554639552758,
-      auth_time: 1554639552758,
-      auth_name: 'admin'
-    },
-    {
-      menus: [
-        '/home'
-      ],
-      "_id": 'ddsfsdfasgtjtyjfadfdsagsdgsdg',
-      name: '角色1',
-      create_time: 1554639552751,
-      auth_time: 1554639552752,
-      auth_name: 'admin'
-    }, {
-      menus: [
-        '/home'
-      ],
-      "_id": '4cefasddsdgfadfdsagsdgsdg',
-      name: '角色1',
-      create_time: 1554639552753,
-      auth_time: 1554639552752,
-      auth_name: 'admin'
-    }
-    ]
+    roles:  [],
+    role:{} // 選中的role
   }
 
   initColums = () => {
@@ -63,7 +36,16 @@ export default class Role extends Component {
     return {
       onClick:event=>{
         console.log(role);
+        this.setState({role})
       }
+    }
+  }
+
+  getRoles = async ()=>{
+    const result = await reqRoles()
+    if(result.status===0){
+      const roles = result.data
+      this.setState({roles})
     }
   }
 
@@ -71,13 +53,16 @@ export default class Role extends Component {
     this.initColums()
   }
 
+  componentDidMount(){
+    this.getRoles()
+  }
 
   render() {
-    const { roles } = this.state
+    const { roles,role } = this.state
     const title = (
       <span>
         <Button type='primary'>創建角色</Button> &nbsp;&nbsp;
-        <Button type='primary' disabled>設置角色</Button>
+        <Button type='primary' disabled={!role._id}>設置角色</Button>
       </span>
     )
     return (
@@ -88,7 +73,7 @@ export default class Role extends Component {
           columns={this.columns}
           rowKey='_id' // 指定key
           pagination={{ defaultPageSize: PAGE_SIZE, showQuickJumper: true }}
-          rowSelection={{type:'radio'}}
+          rowSelection={{type:'radio',selectedRowKeys:[role._id]}}
           rowClassName={(record, index) => 'tablerow' }
           onRow={this.onRow}
         />
