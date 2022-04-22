@@ -5,11 +5,12 @@ import {
   Input,
   Icon,
   Cascader,// 級聯選擇
-  Upload,
-  Button
+
+  Button,
+  message
 } from 'antd'
 import LinkButton from '../../components/link-button'
-import { reqCategorys, reqLogin } from '../../api'
+import { reqCategorys, reqAddOrUpdateProduct } from '../../api'
 import RichTextEditor from './rich-text-editor'
 import PicturesWall from './pictures-wall'
 
@@ -103,14 +104,31 @@ class ProductAddUpdate extends Component {
   }
 
   submit = () => {
-    this.props.form.validateFields((error, values) => {
+    this.props.form.validateFields(async(error, values) => {
       if (!error) {
-        console.log(values)
-        console.log(this.pw);
+        // 1. 收集數據 並封裝成product對象
+        const {name,desc,price,categoryIds} = values
+        let pCategoryId,categoryId
+        if(categoryIds.length===1){
+          pCategoryId='0'
+          categoryId = categoryIds[0]
+        }else{
+          pCategoryId = categoryIds[0]
+          categoryId = categoryIds[1]
+        }
         const imgs = this.pw.current.getImgs()
         const detail = this.editor.current.getDetail()
-        console.log('imgs',imgs)
-        console.log('detail',detail)
+        const product = {name,desc,price,imgs,detail,pCategoryId,categoryId}
+        if(this.isUpdate){
+          product._id = this.product._id
+        }
+        const result = await reqAddOrUpdateProduct(product)
+        if(result.status===0){
+          message.success(`${this.isUpdate ? '更新':'添加'}商品成功`)
+          this.props.history.goBack()
+        } else{
+          message.error(`${this.isUpdate ? '更新':'添加'}商品失敗`)
+        }
       }
     })
   }
@@ -200,7 +218,7 @@ class ProductAddUpdate extends Component {
           </Item>
           <Item label="商品分類">
             {
-              getFieldDecorator('category', {
+              getFieldDecorator('categoryIds', {
                 initialValue:categoryIds,
                 rules: [
                   { required: true, message: '必須指定商品分類' }

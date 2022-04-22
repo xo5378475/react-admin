@@ -36,6 +36,10 @@ export const reqSearchProducts = ({pageNum,pageSize,searchName,searchType})=>aja
 
 export const reqDeleteImg = (name)=> ajax(BASE+'/manage/img/delete',{name},'POST')
 
+// 添加或修改商品
+export const reqAddOrUpdateProduct = (product) => ajax(BASE+'/manage/product/'+(product._id?'update':'add'),product,'POST')
+//export const reqUpdateProduct = (product) => ajax(BASE+'/manage/product/update',product,'POST')
+
 //添加用戶
 export const reqAddUser = (user) => ajax(BASE + '/manage/user/add',user,'POST')
 
