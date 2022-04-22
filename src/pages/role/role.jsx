@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
-import { Button, Table, Card } from 'antd'
+import { Button, Table, Card,Modal } from 'antd'
 import { PAGE_SIZE } from '../../utils/constants'
 import { reqRoles } from '../../api'
 import './role.less'
+import AddForm from './add-form'
 
 export default class Role extends Component {
 
   state = {
     roles:  [],
-    role:{} // 選中的role
+    role:[] ,// 選中的role key
+    isShowAdd:false
   }
 
   initColums = () => {
@@ -36,7 +38,7 @@ export default class Role extends Component {
     return {
       onClick:event=>{
         console.log(role);
-        this.setState({role})
+        this.setState({role:[role._id]})
       }
     }
   }
@@ -49,6 +51,18 @@ export default class Role extends Component {
     }
   }
 
+  // 用來控制按中radio
+  onSelectedRowKeysChange=(selectedRowKeys)=>{
+
+   this.setState({
+     role:[...selectedRowKeys]
+   })
+  }
+
+  addRole = ()=>{
+
+  }
+
   componentWillMount() {
     this.initColums()
   }
@@ -58,11 +72,11 @@ export default class Role extends Component {
   }
 
   render() {
-    const { roles,role } = this.state
+    const { roles,role,isShowAdd } = this.state
     const title = (
       <span>
-        <Button type='primary'>創建角色</Button> &nbsp;&nbsp;
-        <Button type='primary' disabled={!role._id}>設置角色</Button>
+        <Button type='primary' onClick={()=>this.setState({isShowAdd:true})}>創建角色</Button> &nbsp;&nbsp;
+        <Button type='primary' disabled={role.length===0}>設置角色</Button>
       </span>
     )
     return (
@@ -73,10 +87,19 @@ export default class Role extends Component {
           columns={this.columns}
           rowKey='_id' // 指定key
           pagination={{ defaultPageSize: PAGE_SIZE, showQuickJumper: true }}
-          rowSelection={{type:'radio',selectedRowKeys:[role._id]}}
+          rowSelection={{type:'radio',selectedRowKeys:[...role], onChange: this.onSelectedRowKeysChange}}
           rowClassName={(record, index) => 'tablerow' }
           onRow={this.onRow}
         />
+         <Modal title="添加角色"
+          visible={isShowAdd}
+          onOk={this.addRole}
+          onCancel={()=>this.setState({isShowAdd:false})}>
+          <AddForm
+            
+            setForm={(form) => this.form = form}
+          ></AddForm>
+        </Modal>
       </Card>
     )
   }
