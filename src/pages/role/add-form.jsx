@@ -14,6 +14,8 @@ class AddForm extends Component {
     
   }
 
+
+
   componentWillMount() {
     this.props.setForm(this.props.form)
   }
@@ -31,9 +33,9 @@ class AddForm extends Component {
           {
             getFieldDecorator('roleName', {
               initialValue: '',
-              rules: [{ required: true, message: '腳色名稱必須輸入' }]
+              rules: [{ required: true, message: '角色名稱必須輸入' }]
             })(
-              <Input placeholder='請輸入腳色名稱'></Input>
+              <Input placeholder='請輸入角色名稱'></Input>
             )
           }
         </Item>

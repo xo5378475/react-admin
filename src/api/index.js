@@ -42,7 +42,7 @@ export const reqAddOrUpdateProduct = (product) => ajax(BASE+'/manage/product/'+(
 
 // 獲取所有角色列表
 export const reqRoles = ()=>ajax(BASE+'/manage/role/list')
-
+export const reqAddRole = (roleName) => ajax(BASE+'/manage/role/add',{roleName},'POST')
 
 //添加用戶
 export const reqAddUser = (user) => ajax(BASE + '/manage/user/add',user,'POST')

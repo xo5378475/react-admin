@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Button, Table, Card,Modal } from 'antd'
+import { Button, Table, Card,Modal, message } from 'antd'
 import { PAGE_SIZE } from '../../utils/constants'
-import { reqRoles } from '../../api'
+import { reqRoles ,reqAddRole} from '../../api'
 import './role.less'
 import AddForm from './add-form'
 
@@ -51,6 +51,28 @@ export default class Role extends Component {
     }
   }
 
+  addRole = ()=>{
+    this.form.validateFields(async(error,values)=>{
+      if(!error){
+        const {roleName} = values
+        this.form.resetFields();
+        this.setState({isShowAdd:false})
+        const result = await reqAddRole(roleName)
+        if(result.status===0){
+          message.success('添加角色成功')
+          const role = result.data
+          //this.getRoles()
+         
+          this.setState(state=>({
+            roles:[...state.roles,role]
+          }))
+        } else{
+          message.error('添加角色失敗')
+        }
+      }
+    })
+  }
+
   // 用來控制按中radio
   onSelectedRowKeysChange=(selectedRowKeys)=>{
 
@@ -59,9 +81,7 @@ export default class Role extends Component {
    })
   }
 
-  addRole = ()=>{
 
-  }
 
   componentWillMount() {
     this.initColums()
@@ -94,7 +114,10 @@ export default class Role extends Component {
          <Modal title="添加角色"
           visible={isShowAdd}
           onOk={this.addRole}
-          onCancel={()=>this.setState({isShowAdd:false})}>
+          onCancel={()=>{
+            this.setState({isShowAdd:false})
+            this.form.resetFields()
+          }}>
           <AddForm
             
             setForm={(form) => this.form = form}
