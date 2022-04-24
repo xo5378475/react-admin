@@ -47,6 +47,13 @@ export default class AuthForm extends Component {
     this.treeNodes = this.getTreeNodes(menuList)
   }
 
+  // 根據新傳入的role來更新checkedKeys狀態
+  componentWillReceiveProps(nextProps){
+    const menus = nextProps.role.menus
+    this.setState({
+      checkedKeys:menus
+    })
+  } 
 
   render() {
     const { role } = this.props

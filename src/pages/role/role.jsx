@@ -5,6 +5,8 @@ import { reqRoles ,reqAddRole,reqRole,reqUpdateRole} from '../../api'
 import './role.less'
 import AddForm from './add-form'
 import AuthForm from './auth-form'
+import memoryUtils from '../../utils/memoryUtils'
+import {formateDate} from '../../utils/dateUtils'
 
 export default class Role extends Component {
 
@@ -29,11 +31,13 @@ export default class Role extends Component {
       },
       {
         title: '創建時間',
-        dataIndex: 'create_time'
+        dataIndex: 'create_time',
+        render:(create_time)=>formateDate(create_time)
       },
       {
         title: '授權時間',
-        dataIndex: 'auth_time'
+        dataIndex: 'auth_time',
+        render:formateDate
       },
       {
         title: '授權人',
@@ -88,6 +92,8 @@ export default class Role extends Component {
     const role = this.state.roleObj
     const menus = this.auth.current.getMenus()
     role.menus = menus
+    role.auth_name = memoryUtils.user.username
+    role.auth_time = Date.now()
     const result = await reqUpdateRole(role)
     if(result.status===0){
       message.success('設置角色權限成功')
