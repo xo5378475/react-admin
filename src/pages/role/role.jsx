@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Table, Card,Modal, message } from 'antd'
 import { PAGE_SIZE } from '../../utils/constants'
-import { reqRoles ,reqAddRole,reqRole} from '../../api'
+import { reqRoles ,reqAddRole,reqRole,reqUpdateRole} from '../../api'
 import './role.less'
 import AddForm from './add-form'
 import AuthForm from './auth-form'
@@ -14,6 +14,11 @@ export default class Role extends Component {
     isShowAdd:false,
     isShowAuth:false,
     roleObj:{}
+  }
+
+  constructor(props){
+    super(props)
+    this.auth = React.createRef()
   }
 
   initColums = () => {
@@ -78,8 +83,21 @@ export default class Role extends Component {
     })
   }
 
-  updateRole =()=>{
-
+  updateRole =async()=>{
+    this.setState({isShowAuth:false})
+    const role = this.state.roleObj
+    const menus = this.auth.current.getMenus()
+    role.menus = menus
+    const result = await reqUpdateRole(role)
+    if(result.status===0){
+      message.success('設置角色權限成功')
+      this.setState({
+        roles:[...this.state.roles]
+      })
+    }
+    console.log(
+      menus,role
+    );
   }
 
   // 用來控制按中radio
@@ -139,7 +157,7 @@ export default class Role extends Component {
             this.setState({isShowAuth:false})
         
           }}>
-          <AuthForm role={roleObj}
+          <AuthForm role={roleObj} ref={this.auth}
             // setForm={(form) => this.form = form}
           ></AuthForm>
         </Modal>

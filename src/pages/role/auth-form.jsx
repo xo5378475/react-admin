@@ -9,31 +9,48 @@ const { TreeNode } = Tree
 export default class AuthForm extends Component {
 
   state = {
-    role: {}
+    role: {},
   }
 
   static propTypes = {
     role: PropTypes.object
   }
 
-  getTreeNodes = (menuList)=>{
-    return menuList.reduce((pre,item)=>{
+  constructor(props) {
+    super(props)
+    const menus = this.props.role.menus
+    this.state = {
+      checkedKeys: menus
+    }
+
+  }
+
+  getTreeNodes = (menuList) => {
+    return menuList.reduce((pre, item) => {
       pre.push(
         <TreeNode title={item.title} key={item.key}>
-          {item.children ? this.getTreeNodes(item.children):null}
+          {item.children ? this.getTreeNodes(item.children) : null}
         </TreeNode>
       )
       return pre
-    },[])
+    }, [])
   }
 
-  componentWillMount(){
+  getMenus = ()=>this.state.checkedKeys
+
+   onCheck = checkedKeys => {
+    console.log('onCheck', checkedKeys);
+    this.setState({ checkedKeys });
+  };
+
+  componentWillMount() {
     this.treeNodes = this.getTreeNodes(menuList)
   }
 
 
   render() {
     const { role } = this.props
+    const { checkedKeys } = this.state
     const formItemLayout = {
       labelCol: { span: 4 }, // 左側label的寬度
       wrapperCol: { span: 20 } //指定右側包裹的寬度
@@ -50,6 +67,8 @@ export default class AuthForm extends Component {
         <Tree
           checkable
           defaultExpandAll={true}
+          onCheck={this.onCheck}
+          checkedKeys={checkedKeys}
         >
           <TreeNode title="平台權限" key="all">
             {this.treeNodes}

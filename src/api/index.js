@@ -43,6 +43,7 @@ export const reqAddOrUpdateProduct = (product) => ajax(BASE+'/manage/product/'+(
 // 獲取所有角色列表
 export const reqRoles = ()=>ajax(BASE+'/manage/role/list')
 export const reqAddRole = (roleName) => ajax(BASE+'/manage/role/add',{roleName},'POST')
+export const reqUpdateRole =(role)=> ajax(BASE+'/manage/role/update',role,'POST')
 
 export const reqRole =(_id)=>ajax(BASE+'/manage/role/info',{_id})
 
