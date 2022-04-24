@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-
+import menuList from '../../config/menuConfig'
 import { Tree, Form, Input } from 'antd'
 import PropTypes from 'prop-types'
+
+
 const Item = Form.Item
 const { TreeNode } = Tree
 export default class AuthForm extends Component {
@@ -14,6 +16,20 @@ export default class AuthForm extends Component {
     role: PropTypes.object
   }
 
+  getTreeNodes = (menuList)=>{
+    return menuList.reduce((pre,item)=>{
+      pre.push(
+        <TreeNode title={item.title} key={item.key}>
+          {item.children ? this.getTreeNodes(item.children):null}
+        </TreeNode>
+      )
+      return pre
+    },[])
+  }
+
+  componentWillMount(){
+    this.treeNodes = this.getTreeNodes(menuList)
+  }
 
 
   render() {
@@ -33,16 +49,10 @@ export default class AuthForm extends Component {
         </Item>
         <Tree
           checkable
-          
+          defaultExpandAll={true}
         >
-          <TreeNode title="parent 1" key="0-0">
-            <TreeNode title="parent 1-0" key="0-0-0" disabled>
-              <TreeNode title="leaf" key="0-0-0-0" disableCheckbox />
-              <TreeNode title="leaf" key="0-0-0-1" />
-            </TreeNode>
-            <TreeNode title="parent 1-1" key="0-0-1">
-              <TreeNode title={<span style={{ color: '#1890ff' }}>sss</span>} key="0-0-1-0" />
-            </TreeNode>
+          <TreeNode title="平台權限" key="all">
+            {this.treeNodes}
           </TreeNode>
         </Tree>
       </div>
