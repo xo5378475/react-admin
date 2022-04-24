@@ -1,16 +1,19 @@
 import React, { Component } from 'react'
 import { Button, Table, Card,Modal, message } from 'antd'
 import { PAGE_SIZE } from '../../utils/constants'
-import { reqRoles ,reqAddRole} from '../../api'
+import { reqRoles ,reqAddRole,reqRole} from '../../api'
 import './role.less'
 import AddForm from './add-form'
+import AuthForm from './auth-form'
 
 export default class Role extends Component {
 
   state = {
     roles:  [],
     role:[] ,// 選中的role key
-    isShowAdd:false
+    isShowAdd:false,
+    isShowAuth:false,
+    roleObj:{}
   }
 
   initColums = () => {
@@ -38,7 +41,7 @@ export default class Role extends Component {
     return {
       onClick:event=>{
         console.log(role);
-        this.setState({role:[role._id]})
+        this.setState({role:[role._id],roleObj:role})
       }
     }
   }
@@ -50,6 +53,8 @@ export default class Role extends Component {
       this.setState({roles})
     }
   }
+
+
 
   addRole = ()=>{
     this.form.validateFields(async(error,values)=>{
@@ -73,11 +78,16 @@ export default class Role extends Component {
     })
   }
 
-  // 用來控制按中radio
-  onSelectedRowKeysChange=(selectedRowKeys)=>{
+  updateRole =()=>{
 
-   this.setState({
-     role:[...selectedRowKeys]
+  }
+
+  // 用來控制按中radio
+  onSelectedRowKeysChange=async(selectedRowKeys)=>{
+    const roleObj = await reqRole(selectedRowKeys[0])
+  
+    this.setState({
+     role:[...selectedRowKeys],roleObj:roleObj.data
    })
   }
 
@@ -92,11 +102,11 @@ export default class Role extends Component {
   }
 
   render() {
-    const { roles,role,isShowAdd } = this.state
+    const { roles,role,isShowAdd,isShowAuth ,roleObj} = this.state
     const title = (
       <span>
         <Button type='primary' onClick={()=>this.setState({isShowAdd:true})}>創建角色</Button> &nbsp;&nbsp;
-        <Button type='primary' disabled={role.length===0}>設置角色</Button>
+        <Button type='primary' disabled={role.length===0} onClick={()=>this.setState({isShowAuth:true})}>設置角色</Button>
       </span>
     )
     return (
@@ -119,9 +129,19 @@ export default class Role extends Component {
             this.form.resetFields()
           }}>
           <AddForm
-            
             setForm={(form) => this.form = form}
           ></AddForm>
+        </Modal>
+         <Modal title="設置角色權限"
+          visible={isShowAuth}
+          onOk={this.updateRole}
+          onCancel={()=>{
+            this.setState({isShowAuth:false})
+        
+          }}>
+          <AuthForm role={roleObj}
+            // setForm={(form) => this.form = form}
+          ></AuthForm>
         </Modal>
       </Card>
     )
