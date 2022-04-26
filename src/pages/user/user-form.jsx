@@ -13,7 +13,7 @@ const Option = Select.Option
 class UserForm extends PureComponent {
   static propTypes = {
     setForm: PropTypes.func.isRequired, //用來傳遞form對象的函數
-
+    roles:PropTypes.array.isRequired
   }
 
 
@@ -23,6 +23,7 @@ class UserForm extends PureComponent {
   }
 
   render() {
+    const {roles} = this.props
     const { getFieldDecorator } = this.props.form
     const formItemLayout = {
       labelCol: { span: 4 }, // 左側label的寬度
@@ -57,7 +58,7 @@ class UserForm extends PureComponent {
                 {pattern:/^[a-zA-Z0-9_]+$/,message:"密碼必須是英文數字下划線組成"}
               ]
             })(
-              <Input type='password'></Input>
+              <Input type='password' placeholder='請輸入密碼'></Input>
             )
           }
         </Item>
@@ -66,7 +67,7 @@ class UserForm extends PureComponent {
             getFieldDecorator('phone', {
               initialValue: '',
             })(
-              <Input ></Input>
+              <Input placeholder='請輸入手機號碼'></Input>
             )
           }
         </Item>
@@ -75,7 +76,7 @@ class UserForm extends PureComponent {
             getFieldDecorator('email', {
               initialValue: '',
             })(
-              <Input ></Input>
+              <Input placeholder='請輸入郵箱'></Input>
             )
           }
         </Item>
@@ -84,8 +85,10 @@ class UserForm extends PureComponent {
             getFieldDecorator('role_id', {
               initialValue: ''
             })(
-              <Select>
-                <Option value='A'>A</Option>
+              <Select placeholder='請選擇角色'>
+                {
+                  roles.map(role=><Option key={role._id} value={role._id}>{role.name}</Option>)
+                }
               </Select>
             )
           }

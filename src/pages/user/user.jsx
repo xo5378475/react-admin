@@ -10,7 +10,7 @@ import {
 import { formateDate } from '../../utils/dateUtils'
 import LinkButton from '../../components/link-button'
 import { PAGE_SIZE } from '../../utils/constants'
-import { reqDeleteUser, reqUsers } from '../../api'
+import { reqDeleteUser, reqUsers,reqAddUser } from '../../api'
 import UserForm from './user-form'
 
 export default class User extends Component {
@@ -78,7 +78,20 @@ export default class User extends Component {
   }
 
   addOrUpdate=()=>{
-
+    this.form.validateFields(async (err, values) => {
+      if (!err) {
+        this.setState({
+          isShow: false
+        })
+        
+        const result = await reqAddUser(values)
+        this.form.resetFields()
+        if(result.status===0){
+          message.success('添加用戶成功')
+          this.getUsers()
+        }
+      }
+    })
   }
 
   getUsers =async()=>{
@@ -102,7 +115,8 @@ export default class User extends Component {
   }
 
   render() {
-    const {users,isShow} = this.state
+    const {users,isShow,roles} = this.state
+
     const title = <Button type='primary' onClick={()=>this.setState({isShow:true})}>創建用戶</Button>
     return (
       <Card title={title}>
@@ -122,6 +136,7 @@ export default class User extends Component {
         >
           <UserForm
             setForm={(form)=>this.form = form}
+            roles={roles}
           >
 
           </UserForm>

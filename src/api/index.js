@@ -76,4 +76,6 @@ export const reqWeather = (city) => {
 
 export const reqUsers = () => ajax(BASE+'/manage/user/list')
 
+
+
 export const reqDeleteUser = (userId)=>ajax(BASE+'/manage/user/delete',{userId},'POST')
