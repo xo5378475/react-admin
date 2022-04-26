@@ -3,12 +3,13 @@ import {
   Card,
   Button,
   Table,
-  Modal
+  Modal,
+  message
 } from 'antd'
 import { formateDate } from '../../utils/dateUtils'
 import LinkButton from '../../components/link-button'
 import { PAGE_SIZE } from '../../utils/constants'
-import { reqUsers } from '../../api'
+import { reqDeleteUser, reqUsers } from '../../api'
 
 export default class User extends Component {
   state={
@@ -45,7 +46,7 @@ export default class User extends Component {
         render:(user)=>(
           <span>
             <LinkButton>修改</LinkButton>
-            <LinkButton>刪除</LinkButton>
+            <LinkButton onClick={()=>this.deleteUser(user)}>刪除</LinkButton>
           </span>
         )
       }
@@ -58,6 +59,20 @@ export default class User extends Component {
       return pre
     },{})
     this.roleNames = roleNames
+  }
+
+  deleteUser = (user)=>{
+    console.log(user);
+    Modal.confirm({
+      title:`確認刪除${user.username}嗎?`,
+      onOk:async()=>{
+        const result = await reqDeleteUser(user._id)
+        if(result.status===0){
+          message.success('刪除用戶成功!')
+          this.getUsers()
+        }
+      }
+    })
   }
 
   addOrUpdate=()=>{
