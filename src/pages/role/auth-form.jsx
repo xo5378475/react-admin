@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import menuList from '../../config/menuConfig'
 import { Tree, Form, Input } from 'antd'
 import PropTypes from 'prop-types'
 
 
 const Item = Form.Item
-const { TreeNode } = Tree
-export default class AuthForm extends Component {
+const { TreeNode } = Tree            // 父組件render 會比較props和state 子組件決定是否要 render
+export default class AuthForm extends PureComponent {
 
   state = {
     role: {},
@@ -56,6 +56,7 @@ export default class AuthForm extends Component {
   } 
 
   render() {
+    console.log('authForm render');
     const { role } = this.props
     const { checkedKeys } = this.state
     const formItemLayout = {

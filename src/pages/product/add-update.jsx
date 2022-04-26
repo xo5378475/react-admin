@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   Card,
   Form,
@@ -19,7 +19,7 @@ const { TextArea } = Input
 
 
 
-class ProductAddUpdate extends Component {
+class ProductAddUpdate extends PureComponent {
 
   state = {
     options: []
