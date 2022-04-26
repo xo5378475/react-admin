@@ -74,3 +74,4 @@ export const reqWeather = (city) => {
     
 }
 
+export const reqUsers = () => ajax(BASE+'/manage/user/list')
