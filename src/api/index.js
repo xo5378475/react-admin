@@ -48,7 +48,7 @@ export const reqUpdateRole =(role)=> ajax(BASE+'/manage/role/update',role,'POST'
 export const reqRole =(_id)=>ajax(BASE+'/manage/role/info',{_id})
 
 //添加用戶
-export const reqAddUser = (user) => ajax(BASE + '/manage/user/add',user,'POST')
+export const reqAddOrUpdateUser = (user) => ajax(BASE + '/manage/user/'+(user._id ? 'update':'add'),user,'POST')
 
 export const reqWeather = (city) => {
 

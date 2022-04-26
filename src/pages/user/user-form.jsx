@@ -13,7 +13,8 @@ const Option = Select.Option
 class UserForm extends PureComponent {
   static propTypes = {
     setForm: PropTypes.func.isRequired, //用來傳遞form對象的函數
-    roles:PropTypes.array.isRequired
+    roles: PropTypes.array.isRequired,
+    user: PropTypes.object
   }
 
 
@@ -23,7 +24,7 @@ class UserForm extends PureComponent {
   }
 
   render() {
-    const {roles} = this.props
+    const { roles, user } = this.props
     const { getFieldDecorator } = this.props.form
     const formItemLayout = {
       labelCol: { span: 4 }, // 左側label的寬度
@@ -35,7 +36,7 @@ class UserForm extends PureComponent {
         <Item label='用戶名'>
           {
             getFieldDecorator('username', {
-              initialValue: '',
+              initialValue: user.username,
               rules: [
                 { required: true, message: '用戶名稱必須輸入' },
                 { min: 4, message: '用戶名至少4位' },
@@ -47,25 +48,30 @@ class UserForm extends PureComponent {
             )
           }
         </Item>
-        <Item label='密碼'>
-          {
-            getFieldDecorator('password', {
-              initialValue: '',
-              rules: [
-                { required: true, message: '密碼稱必須輸入' },
-                {min:4,message:'密碼至少4位'},
-                {max:12,message:'密碼最多12位'},
-                {pattern:/^[a-zA-Z0-9_]+$/,message:"密碼必須是英文數字下划線組成"}
-              ]
-            })(
-              <Input type='password' placeholder='請輸入密碼'></Input>
-            )
-          }
-        </Item>
+        {
+          user._id ? null : (
+
+            <Item label='密碼'>
+              {
+                getFieldDecorator('password', {
+                  initialValue: user.password,
+                  rules: [
+                    { required: true, message: '密碼稱必須輸入' },
+                    { min: 4, message: '密碼至少4位' },
+                    { max: 12, message: '密碼最多12位' },
+                    { pattern: /^[a-zA-Z0-9_]+$/, message: "密碼必須是英文數字下划線組成" }
+                  ]
+                })(
+                  <Input type='password' placeholder='請輸入密碼'></Input>
+                )
+              }
+            </Item>
+          )
+        }
         <Item label='手機號碼'>
           {
             getFieldDecorator('phone', {
-              initialValue: '',
+              initialValue: user.phone,
             })(
               <Input placeholder='請輸入手機號碼'></Input>
             )
@@ -74,7 +80,7 @@ class UserForm extends PureComponent {
         <Item label='郵箱'>
           {
             getFieldDecorator('email', {
-              initialValue: '',
+              initialValue: user.email,
             })(
               <Input placeholder='請輸入郵箱'></Input>
             )
@@ -83,11 +89,11 @@ class UserForm extends PureComponent {
         <Item label='角色'>
           {
             getFieldDecorator('role_id', {
-              initialValue: ''
+              initialValue: user.role_id
             })(
               <Select placeholder='請選擇角色'>
                 {
-                  roles.map(role=><Option key={role._id} value={role._id}>{role.name}</Option>)
+                  roles.map(role => <Option key={role._id} value={role._id}>{role.name}</Option>)
                 }
               </Select>
             )
