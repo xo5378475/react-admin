@@ -61,6 +61,33 @@
                 })
             }
 
+            update5 = ()=>{
+                console.log('update5 setState()之前', this.state.count);
+                this.setState(state => ({ count: state.count + 1 }))
+                console.log('update5 setState()之前', this.state.count);
+                console.log('update5 setState()之前2', this.state.count);
+                this.setState(state => ({ count: state.count + 1 }))
+                console.log('update5 setState()之前2', this.state.count);
+            }
+
+            update6 = ()=>{
+                console.log('update6 setState()之前', this.state.count);
+                this.setState({count:this.state.count+1})
+                console.log('update6 setState()之前', this.state.count);
+                console.log('update6 setState()之前2', this.state.count);
+                this.setState({count:this.state.count+1})
+                console.log('update6 setState()之前2', this.state.count);
+            }
+
+            update7 = ()=>{
+                console.log('update7 setState()之前', this.state.count);
+                this.setState({count:this.state.count+1})
+                console.log('update7 setState()之前', this.state.count);
+                console.log('update7 setState()之前2', this.state.count);
+                 this.setState(state=>({count:state.count+1}))
+                console.log('update7 setState()之前2', this.state.count);
+            }
+
             render() {
                 const { count } = this.state
                 console.log(" render()", count);

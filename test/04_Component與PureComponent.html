@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/babel.min.js"></script>
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        class A extends React.Component {
+            state = {
+                m1:1
+            }
+
+            test1 = ()=>{
+                // this.setState(state=>({
+                //     m1:state.m1+1
+                // }))
+                this.setState({})
+            }
+
+            shouldComponentUpdate(nextProps,nextState){
+
+                return true
+            }
+
+            render() {
+                console.log('A render()')
+
+                return (
+                    <div>
+                        <h1>A組件: {this.state.m1}</h1>
+                        <button onClick={this.test1}>A 測試1</button>
+                        <B m1={this.state.m1}/>
+                    </div>
+                )
+            }
+
+        }
+
+        class B extends React.Component {
+            state = {
+                m2:1
+            }
+
+            test2 = ()=>{
+                this.setState(state=>({
+                    m2:state.m2+1
+                }))
+            }
+            shouldComponentUpdate(nextProps,nextState){
+                console.log(
+                    'shouldComponentUpdate'
+                );
+                if(this.props.m1===nextProps.m1 && this.state.m2===nextState.m2){
+                    return false
+                }
+                return true
+            }
+
+            render() {
+                console.log('B render()')
+
+                return (
+                    <div>
+                        <h1>B組件:m2= {this.state.m2} m1={this.props.m1}</h1>
+                        <button onClick={this.test2}>B 測試2</button>
+                    </div>
+                )
+            }
+
+        }
+
+        ReactDOM.render(<A />, document.getElementById('root'))
+
+
+    </script>
+</body>
+
+</html>
