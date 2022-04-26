@@ -4,12 +4,14 @@ import {
   Button,
   Table,
   Modal,
+
   message
 } from 'antd'
 import { formateDate } from '../../utils/dateUtils'
 import LinkButton from '../../components/link-button'
 import { PAGE_SIZE } from '../../utils/constants'
 import { reqDeleteUser, reqUsers } from '../../api'
+import UserForm from './user-form'
 
 export default class User extends Component {
   state={
@@ -101,7 +103,7 @@ export default class User extends Component {
 
   render() {
     const {users,isShow} = this.state
-    const title = <Button type='primary'>創建用戶</Button>
+    const title = <Button type='primary' onClick={()=>this.setState({isShow:true})}>創建用戶</Button>
     return (
       <Card title={title}>
          <Table
@@ -118,11 +120,14 @@ export default class User extends Component {
           onOk={this.addOrUpdate}
           onCancel={()=>this.setState({isShow:false})}
         >
-          <div>
-            添加/更新介面
-          </div>
+          <UserForm
+            setForm={(form)=>this.form = form}
+          >
+
+          </UserForm>
         </Modal>
       </Card>
     )
   }
 }
+
