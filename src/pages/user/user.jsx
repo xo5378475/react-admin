@@ -39,10 +39,7 @@ export default class User extends Component {
       {
         title:'所屬角色',
         dataIndex:'role_id',
-        render:(role_id)=> {
-         var role =  this.state.roles.find(role=>role._id===role_id)
-         return role ? role.name : ''
-        }
+        render:(role_id)=>this.roleNames[role_id]
       },{
         title:'操作',
         render:(user)=>(
@@ -55,6 +52,14 @@ export default class User extends Component {
     ]
   }
 
+  initRoleNames = (roles)=>{
+    const roleNames = roles.reduce((pre,role)=>{
+      pre[role._id] = role.name
+      return pre
+    },{})
+    this.roleNames = roleNames
+  }
+
   addOrUpdate=()=>{
 
   }
@@ -63,6 +68,7 @@ export default class User extends Component {
     const result = await reqUsers()
     if(result.status===0){
       const {users,roles} = result.data
+      this.initRoleNames(roles)
       this.setState({
         users,
         roles
