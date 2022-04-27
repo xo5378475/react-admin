@@ -69,7 +69,7 @@ export default class User extends Component {
   }
 
   showAdd = (user) => {
-    this.user = null
+    this.user = {}
     this.setState({ isShow: true })
   }
 
@@ -93,7 +93,7 @@ export default class User extends Component {
         this.setState({
           isShow: false
         })
-        if (this.user._id) {
+        if (this.user) {
           values._id = this.user._id
         }
 
@@ -102,6 +102,8 @@ export default class User extends Component {
         if (result.status === 0) {
           message.success(`${this.user._id ? '修改' : '添加'}用戶成功`)
           this.getUsers()
+        }else{
+          message.error(`${this.user._id ? '修改':'添加'}用戶失敗`)
         }
       }
     })

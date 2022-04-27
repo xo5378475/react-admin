@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
 import './index.less'
 import logo from '../../assets/images/logo.png'
-import { Link ,withRouter} from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { Menu, Icon } from 'antd';
 import menuList from '../../config/menuConfig'
+import memoryUtils from '../../utils/memoryUtils';
 
 const { SubMenu } = Menu;
 
- class LeftNav extends Component {
-//  使用MAP + 遞歸
-  getMenuNodes_map = (menuList)=>{
-    return menuList.map(item=>{
+class LeftNav extends Component {
+  //  使用MAP + 遞歸
+  getMenuNodes_map = (menuList) => {
+    return menuList.map(item => {
       /**
        * {
        *    title:'首頁',
@@ -19,8 +20,8 @@ const { SubMenu } = Menu;
        *    children:[] 可能有 可能沒有
        * }
        */
-      if(!item.children){
-        return(
+      if (!item.children) {
+        return (
           <Menu.Item key={item.key}>
             <Link to={item.key}>
               <Icon type={item.icon} />
@@ -28,8 +29,8 @@ const { SubMenu } = Menu;
             </Link>
           </Menu.Item>
         )
-      } else{
-        return(
+      } else {
+        return (
           <SubMenu
             key={item.key}
             title={
@@ -42,61 +43,76 @@ const { SubMenu } = Menu;
             {
               this.getMenuNodes(item.children)
             }
-          
+
           </SubMenu>
         )
       }
     })
   }
 
-  getMenuNodes = (menuList)=>{
-    return menuList.reduce((pre,item)=>{
-      if (!item.children) {
-        pre.push((
-          <Menu.Item key={item.key}>
-            <Link to={item.key}>
-              <Icon type={item.icon} />
-              <span>{item.title}</span>
-            </Link>
-          </Menu.Item>
-        ))
-      } else {
-        const path = this.props.location.pathname
-        // Array.prototype.find() 會回傳第一個滿足所提供之測試函式的元素值。否則回傳 undefined。
-        const cItem = item.children.find(cItem => path.indexOf(cItem.key)===0 )
-        if(cItem){
-          this.openKey = item.key
-        }
-
-        pre.push((
-          <SubMenu
-            key={item.key}
-            title={
-              <span>
+  getMenuNodes = (menuList) => {
+    const path = this.props.location.pathname
+    return menuList.reduce((pre, item) => {
+      if (this.hasAuth(item)) {
+        if (!item.children) {
+          pre.push((
+            <Menu.Item key={item.key}>
+              <Link to={item.key}>
                 <Icon type={item.icon} />
                 <span>{item.title}</span>
-              </span>
-            }
-          >
-            {
-              this.getMenuNodes(item.children)
-            }
-          
-          </SubMenu>
-        ))
+              </Link>
+            </Menu.Item>
+          ))
+        } else {
+          // Array.prototype.find() 會回傳第一個滿足所提供之測試函式的元素值。否則回傳 undefined。
+          const cItem = item.children.find(cItem => path.indexOf(cItem.key) === 0)
+          if (cItem) {
+            this.openKey = item.key
+          }
+
+          pre.push((
+            <SubMenu
+              key={item.key}
+              title={
+                <span>
+                  <Icon type={item.icon} />
+                  <span>{item.title}</span>
+                </span>
+              }
+            >
+              {
+                this.getMenuNodes(item.children)
+              }
+
+            </SubMenu>
+          ))
+        }
       }
       return pre
-    },[])
+    }, [])
+  }
+
+  hasAuth = (item)=>{
+    const {key,isPublic} = item
+    const menus = memoryUtils.user.role.menus
+    const username = memoryUtils.user.username
+    // 如果當前是admin
+    if(username==='admin' || isPublic || menus.indexOf(key)!==-1){
+      return true
+    } else if(item.children){ // 如果當前用戶有此item的某個子item 權限
+      return !!item.children.find(child=>menus.indexOf(child.key)!==-1)
+    }
+    return false
   }
 
   // 在第一次render()執行一次 // v16 可用 v17 已棄
-  componentWillMount(){
+  componentWillMount() {
     this.menuNodes = this.getMenuNodes(menuList)
   }
 
   render() {
     let path = this.props.location.pathname
-    if(path.indexOf('/product')===0){ //當前請求的是商品或其子路由介面
+    if (path.indexOf('/product') === 0) { //當前請求的是商品或其子路由介面
       path = '/product'
 
     }

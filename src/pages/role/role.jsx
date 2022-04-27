@@ -7,6 +7,7 @@ import AddForm from './add-form'
 import AuthForm from './auth-form'
 import memoryUtils from '../../utils/memoryUtils'
 import {formateDate} from '../../utils/dateUtils'
+import storageUtils from '../../utils/storageUtils'
 
 export default class Role extends Component {
 
@@ -96,10 +97,17 @@ export default class Role extends Component {
     role.auth_time = Date.now()
     const result = await reqUpdateRole(role)
     if(result.status===0){
-      message.success('設置角色權限成功')
+      if(role._id === memoryUtils.user.role_id){
+        memoryUtils.user = {}
+        storageUtils.removeUser()
+        this.props.history.replace('/login')
+        message.success('當前用戶角色權限修改了，重新登錄')
+      }else{
+              message.success('設置角色權限成功')
       this.setState({
         roles:[...this.state.roles]
       })
+      }
     }
     console.log(
       menus,role
