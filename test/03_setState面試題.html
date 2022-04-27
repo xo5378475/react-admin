@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/babel.min.js"></script>
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        class StateTest extends React.Component {
+            state = {
+                count: 0
+            }
+
+
+
+            componentDidMount() {
+                this.setState({count:this.state.count+1})
+                this.setState({count:this.state.count+1})
+                console.log(this.state.count,'obj setState');// 2  =0
+
+                this.setState(state => ({ count: state.count + 1 }))
+                this.setState(state => ({ count: state.count + 1 }))
+                console.log(this.state.count,'func setState') // 3=0
+
+                setTimeout(()=>{
+                this.setState({count:this.state.count+1})
+                console.log('timeout',this.state.count);
+                this.setState({count:this.state.count+1})
+                console.log('timeout',this.state.count);
+                },0)
+                // promise回調先執行
+                Promise.resolve().then(value=>{
+                this.setState({count:this.state.count+1})
+                console.log('promise',this.state.count); // 6==>4 
+                this.setState({count:this.state.count+1})
+                console.log('promise',this.state.count); // 8==>5
+
+                })
+
+               
+            }
+
+
+            render() {
+                const { count } = this.state
+                console.log(" render()", count); // 1 ==>0 /4==>3 5==>4 7==>5
+
+                return (
+                    <div>
+                      <p>{count}</p>
+                    </div>
+                )
+            }
+
+        }
+
+        ReactDOM.render(<StateTest />, document.getElementById('root'))
+
+
+    </script>
+</body>
+
+</html>

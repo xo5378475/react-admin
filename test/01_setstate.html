@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/babel.min.js"></script>
+    <script src="./js/react.development.js"></script>
+    <script src="./js/react-dom.development.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        class A extends React.Component {
+            state = {
+                count: 1
+            }
+
+            test1 = ()=>{
+                this.setState(state=>({
+                    count:state.count+1
+                }))
+                console.log('test1 setState()之後',this.state.count);
+            }
+
+            test2 = ()=>{
+                const count = this.state.count +1
+                this.setState({count})
+                console.log('test2 setState()之後',this.state.count);
+            }
+            
+            test3 = ()=>{
+                this.setState(state=>({count:state.count+1}),()=>{
+                    console.log('test3 setState callback()',this.state.count);
+                })
+            }
+
+            render() {
+                console.log("A render()");
+                return (
+                    <div>
+                        <h1>A組件: {this.state.count}</h1>
+                        <button onClick={this.test1}>A 測試1</button>&nbsp;&nbsp;
+                        <button onClick={this.test2}>A 測試2</button>&nbsp;&nbsp;
+                        <button onClick={this.test3}>A 測試3</button>&nbsp;&nbsp;
+                    </div>
+                )
+            }
+
+        }
+
+        ReactDOM.render(<A />, document.getElementById('root'))
+
+
+    </script>
+</body>
+
+</html>
