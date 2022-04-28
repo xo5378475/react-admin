@@ -149,7 +149,10 @@ export default class Role extends Component {
           columns={this.columns}
           rowKey='_id' // 指定key
           pagination={{ defaultPageSize: PAGE_SIZE, showQuickJumper: true }}
-          rowSelection={{type:'radio',selectedRowKeys:[...role], onChange: this.onSelectedRowKeysChange}}
+          rowSelection={{type:'radio',selectedRowKeys:[...role],
+           onChange: this.onSelectedRowKeysChange
+            // 亦可使用 onSelect :(role)=>{this.setState({role})}
+          }}
           rowClassName={(record, index) => 'tablerow' }
           onRow={this.onRow}
         />

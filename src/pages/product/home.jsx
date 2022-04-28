@@ -148,12 +148,14 @@ export default class ProductHome extends Component {
     return (
       <Card title={title} extra={extra}>
         <Table 
+
           bordered
           rowKey='_id'
           dataSource={products} 
           columns={this.columns} 
           loading={loading}
           pagination={{
+            current:this.pageNum,
             defaultPageSize:PAGE_SIZE,
             showQuickJumper:true,
             total,
